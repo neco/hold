@@ -1,6 +1,30 @@
 require 'spec_helper'
 
 describe "Event Inventory scraper" do
+  before(:all) do
+    FakeWeb.register_uri(
+      :get,
+      'https://www.eventinventory.com/login/index.cfm',
+      :body => fakeweb_template('event_inventory/login.html')
+    )
+    FakeWeb.register_uri(
+      :post,
+      'https://www.eventinventory.com/login/login.cfm',
+      :status => [302, 'Found'],
+      :location => 'https://www.eventinventory.com/basic/index.cfm'
+    )
+    FakeWeb.register_uri(
+      :get,
+      'https://www.eventinventory.com/basic/index.cfm',
+      :body => fakeweb_template('event_inventory/home.html')
+    )
+    FakeWeb.register_uri(
+      :get,
+      'https://www.eventinventory.com/Basic/SystemOrders/Orders.aspx',
+      :body => fakeweb_template('event_inventory/orders.html')
+    )
+  end
+
   before(:each) do
     event_inventory = Scrapers::EventInventory.new('username', 'password')
     @orders = event_inventory.orders
@@ -38,7 +62,7 @@ describe "Event Inventory scraper" do
     end
 
     it "have an event date" do
-      @order.event_date.should == Time.local(2010, 2, 7, 0, 0, 0)
+      @order.event_date.should == Time.local(2010, 2, 7, 20, 0, 0)
     end
 
     it "have a quantity" do
@@ -56,5 +80,9 @@ describe "Event Inventory scraper" do
     it "have a status" do
       @order.status.should == 'Pending'
     end
+  end
+
+  after(:all) do
+    FakeWeb.clean_registry
   end
 end
