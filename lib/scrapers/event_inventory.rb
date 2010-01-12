@@ -8,7 +8,7 @@ module Scrapers
       super()
     end
 
-    def orders(all=false)
+    def orders
       login
       visit "#{HOST}/Basic/SystemOrders/Orders.aspx"
 
