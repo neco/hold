@@ -2,12 +2,6 @@ module Scrapers
   class RazorGator < Base
     HOST = 'https://supplier.razorgator.com'.freeze
 
-    def initialize(username, password)
-      @username = username
-      @password = password
-      super()
-    end
-
     def orders
       login('/sss.aspx')
 

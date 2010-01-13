@@ -2,12 +2,6 @@ module Scrapers
   class EventInventory < Base
     HOST = 'https://www.eventinventory.com'.freeze
 
-    def initialize(username, password)
-      @username = username
-      @password = password
-      super()
-    end
-
     def orders
       login
       visit "#{HOST}/Basic/SystemOrders/Orders.aspx"

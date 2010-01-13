@@ -2,12 +2,6 @@ module Scrapers
   class StubHub < Base
     HOST = 'https://myaccount.stubhub.com'.freeze
 
-    def initialize(username, password)
-      @username = username
-      @password = password
-      super()
-    end
-
     def orders
       login
       visit "#{HOST}/?gSec=account&action=sell&which_info=salePending"
