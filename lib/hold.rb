@@ -15,3 +15,4 @@ end
 require 'scrapers/base'
 require 'scrapers/event_inventory'
 require 'scrapers/razor_gator'
+require 'scrapers/stub_hub'
