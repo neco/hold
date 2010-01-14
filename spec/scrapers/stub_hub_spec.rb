@@ -24,6 +24,21 @@ describe "StubHub scraper" do
       'https://www.stubhub.com/?gSec=account&action=sell&which_info=salePending&',
       :body => fakeweb_template('stub_hub/orders.html')
     )
+    FakeWeb.register_uri(
+      :get,
+      'https://myaccount.stubhub.com/rock-of-ages-new-york-tickets/rock-of-ages-new-york-1-16-2010-902526/',
+      :body => fakeweb_template('stub_hub/event_1.html')
+    )
+    FakeWeb.register_uri(
+      :get,
+      'https://myaccount.stubhub.com/wicked-broadway-tickets/wicked-new-york-1-17-2010-823340/',
+      :body => fakeweb_template('stub_hub/event_2.html')
+    )
+    FakeWeb.register_uri(
+      :get,
+      'https://myaccount.stubhub.com/ultimate-fighting-tickets/ufc-111-3-27-2010-920511/',
+      :body => fakeweb_template('stub_hub/event_3.html')
+    )
   end
 
   before(:each) do
@@ -37,7 +52,7 @@ describe "StubHub scraper" do
     end
 
     it "returns all of the orders" do
-      @orders.length.should == 1
+      @orders.length.should == 3
     end
   end
 
@@ -47,7 +62,7 @@ describe "StubHub scraper" do
     end
 
     it "have an order ID" do
-      @order.order_id.should == '30374632'
+      @order.order_id.should == '30390265'
     end
 
     it "have an order date" do
@@ -55,27 +70,27 @@ describe "StubHub scraper" do
     end
 
     it "have an event name" do
-      @order.event.should == 'Chicago Bulls at Golden State Warriors Tickets'
+      @order.event.should == 'Rock of Ages Tickets - New York'
     end
 
     it "have a venue name" do
-      @order.venue.should be_nil
+      @order.venue.should == 'Brooks Atkinson Theatre'
     end
 
     it "have an event date" do
-      @order.event_date.should == Time.local(2010, 1, 18, 13, 0, 0)
+      @order.event_date.should == Time.local(2010, 1, 16, 20, 0, 0)
     end
 
     it "have a quantity" do
-      @order.quantity.should == 3
+      @order.quantity.should == 2
     end
 
     it "have a section" do
-      @order.section.should == '226'
+      @order.section.should == 'ORCH'
     end
 
     it "have a row" do
-      @order.row.should == '15'
+      @order.row.should == 'G'
     end
 
     it "have a status" do

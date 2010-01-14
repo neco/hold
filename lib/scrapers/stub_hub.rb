@@ -11,12 +11,16 @@ module Scrapers
 
       rows.collect do |row|
         cells = (row / 'td').collect { |cell| cell.inner_text }
+        event_url = (row / 'a').first[:href]
+
+        visit event_url
+        venue = (dom / 'div.topBody a').first.inner_text.strip.split(/\n/).first
 
         Order.new(
           cells[8],
           nil,
           cells[1],
-          nil,
+          venue,
           Time.parse(cells[2]),
           cells[5].to_i,
           cells[3],
