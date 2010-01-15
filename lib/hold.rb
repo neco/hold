@@ -1,3 +1,4 @@
+require 'bigdecimal'
 require 'rubygems'
 
 gem 'json', '1.1.9'
@@ -7,6 +8,7 @@ gem 'webrat', '0.4.5'
 require 'webrat'
 require 'webrat/mechanize'
 require 'webrat/case_insensitive'
+require 'webrat/xpath_as_css'
 
 Webrat.configure do |config|
   config.mode = :mechanize

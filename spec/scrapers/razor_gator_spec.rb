@@ -53,6 +53,10 @@ describe "RazorGator scraper" do
       @order.order_date.should == Time.local(2009, 3, 27, 12, 42, 23)
     end
 
+    it "have a ticket price" do
+      @order.ticket_price.should == BigDecimal.new('65.10')
+    end
+
     it "have an event name" do
       @order.event.should == 'New York Yankees'
     end

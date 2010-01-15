@@ -2,6 +2,7 @@ module Scrapers
   Order = Struct.new(
     :order_id,
     :order_date,
+    :ticket_price,
     :event,
     :venue,
     :event_date,

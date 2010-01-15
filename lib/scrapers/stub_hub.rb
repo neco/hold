@@ -13,16 +13,20 @@ module Scrapers
         cells = (row / 'td').collect { |cell| cell.inner_text }
         event_url = (row / 'a').first[:href]
 
+        total = BigDecimal.new(cells[7].gsub(/[^\d\.]/, ''))
+        quantity = cells[5].to_i
+
         visit event_url
         venue = (dom / 'div.topBody a').first.inner_text.strip.split(/\n/).first
 
         Order.new(
           cells[8],
           nil,
+          (total * BigDecimal.new('0.9')) / quantity,
           cells[1],
           venue,
           Time.parse(cells[2]),
-          cells[5].to_i,
+          quantity,
           cells[3],
           cells[4],
           nil

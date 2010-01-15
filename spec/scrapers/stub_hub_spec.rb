@@ -69,6 +69,10 @@ describe "StubHub scraper" do
       @order.order_date.should be_nil
     end
 
+    it "have a ticket price" do
+      @order.ticket_price.should == BigDecimal.new('250.2')
+    end
+
     it "have an event name" do
       @order.event.should == 'Rock of Ages Tickets - New York'
     end
