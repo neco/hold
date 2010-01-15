@@ -1,4 +1,4 @@
-module Scrapers
+module Exchanges
   class RazorGator < Base
     HOST = 'https://supplier.razorgator.com'.freeze
 

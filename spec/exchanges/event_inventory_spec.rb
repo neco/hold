@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "Event Inventory scraper" do
+describe Exchanges::EventInventory do
   before(:all) do
     FakeWeb.register_uri(
       :get,
@@ -36,7 +36,7 @@ describe "Event Inventory scraper" do
       ]
     )
 
-    event_inventory = Scrapers::EventInventory.new('username', 'password')
+    event_inventory = Exchanges::EventInventory.new('username', 'password')
     @orders = event_inventory.orders
   end
 

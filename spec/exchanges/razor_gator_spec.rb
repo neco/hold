@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "RazorGator scraper" do
+describe Exchanges::RazorGator do
   before(:all) do
     FakeWeb.register_uri(
       :get,
@@ -26,7 +26,7 @@ describe "RazorGator scraper" do
   end
 
   before(:each) do
-    event_inventory = Scrapers::RazorGator.new('username', 'password')
+    event_inventory = Exchanges::RazorGator.new('username', 'password')
     @orders = event_inventory.orders
   end
 

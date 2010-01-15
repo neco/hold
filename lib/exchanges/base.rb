@@ -1,4 +1,4 @@
-module Scrapers
+module Exchanges
   Order = Struct.new(
     :order_id,
     :order_date,

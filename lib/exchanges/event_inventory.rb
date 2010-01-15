@@ -1,4 +1,4 @@
-module Scrapers
+module Exchanges
   class EventInventory < Base
     HOST = 'https://www.eventinventory.com'.freeze
 

@@ -1,4 +1,4 @@
-module Scrapers
+module Exchanges
   class StubHub < Base
     HOST = 'https://myaccount.stubhub.com'.freeze
 

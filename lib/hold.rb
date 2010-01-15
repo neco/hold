@@ -14,7 +14,7 @@ Webrat.configure do |config|
   config.mode = :mechanize
 end
 
-require 'scrapers/base'
-require 'scrapers/event_inventory'
-require 'scrapers/razor_gator'
-require 'scrapers/stub_hub'
+require 'exchanges/base'
+require 'exchanges/event_inventory'
+require 'exchanges/razor_gator'
+require 'exchanges/stub_hub'

@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "StubHub scraper" do
+describe Exchanges::StubHub do
   before(:all) do
     FakeWeb.register_uri(
       :get,
@@ -42,7 +42,7 @@ describe "StubHub scraper" do
   end
 
   before(:each) do
-    stub_hub = Scrapers::StubHub.new('username', 'password')
+    stub_hub = Exchanges::StubHub.new('username', 'password')
     @orders = stub_hub.orders
   end
 
