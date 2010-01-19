@@ -19,3 +19,6 @@ rdoc
 pkg
 
 ## PROJECT::SPECIFIC
+bin/*
+vendor/gems/*
+!vendor/gems/ruby/1.8/cache
