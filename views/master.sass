@@ -1,0 +1,110 @@
+@import reset.sass
+
+!black = #000
+!white = #FFF
+!blue = #36C
+
+!line_height = 1.5em
+
+=rounded(!radius = 0.5em)
+  :-webkit-border-radius = !radius
+  :-moz-border-radius = !radius
+
+body
+  :background-color #FFF
+  :font
+    :family 'Helvetica Neue', 'Helvetica', 'Verdana', sans-serif
+    :size 16px
+  :margin = !line_height 0
+
+  a
+    :color = !blue
+
+#page
+  :width 40em
+  :margin 0 auto
+
+  #header h1
+    :font
+      :size 4em
+      :weight 100
+
+    a
+      :text-decoration none
+
+  #content
+    h2
+      :font
+        :size 2.5em
+        :weight 100
+
+    p
+      :line-height = !line_height
+      :margin-bottom = !line_height
+
+    ul li
+      :line-height = !line_height
+
+    form
+      :margin = !line_height 0
+      :font-weight 300
+
+      .required,
+      .submit
+        :line-height = !line_height
+
+      fieldset
+        :border 1px solid #DDD
+        :margin = !line_height 0
+        :position relative
+
+        legend
+          :font
+            :size 0.75em
+            :weight 400
+          :margin = 0.25em / 0.75
+          :padding = 0 0.25em / 0.75
+          :text-transform uppercase
+
+        .required
+          :float left
+          :margin 0.5em
+
+        .submit
+          :position absolute
+          :bottom 0
+          :right 0
+          :margin 0.5em
+
+      label
+        :display block
+        :font-size 0.875em
+
+    table
+      :margin = !line_height 0
+      :width 100%
+      :border-bottom = 0.125em solid #999
+
+      th,
+      td
+
+      th
+        :font
+          :size 0.75em
+          :weight 400
+        :border-bottom = 0.125em / 0.75 solid #999
+        :padding = 0.25em / 0.75 0.5em / 0.75
+        :text-transform uppercase
+
+      td
+        :border-bottom 1px solid #DDD
+        :font-size 0.875em
+        :padding = 0.25em / 0.875 0.5em / 0.875
+
+  #footer
+    :color #666
+    :margin-top = !line_height
+
+    small
+      :display block
+      :text-align left

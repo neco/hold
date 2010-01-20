@@ -1,0 +1,36 @@
+%h2 Exchange Accounts
+
+%table
+  %tr
+    %th Exchange
+    %th Username
+    %th Password
+
+  - @accounts.each do |account|
+    %tr
+      %td= account.exchange
+      %td= account.username
+      %td= account.password
+
+%form{ :method => 'post' }
+  %fieldset
+    %legend New Account
+
+    .required
+      %label{ :for => 'exchange' } Exchange
+      %select{ :id => 'exchange', :name => 'exchange' }
+        %option{ :value => '' } Select
+        %option{ :value => 'EventInventory' } Event Inventory
+        %option{ :value => 'RazorGator' } RazorGator
+        %option{ :value => 'StubHub' } StubHub
+
+    .required
+      %label{ :for => 'username' } Username
+      %input{ :id => 'username', :name => 'username', :maxlength => 20 }
+
+    .required
+      %label{ :for => 'password' } Password
+      %input{ :id => 'password', :name => 'password', :maxlength => 20 }
+
+    .submit
+      %input{ :type => 'submit', :value => 'Add' }
