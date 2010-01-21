@@ -1,5 +1,3 @@
-require 'vendor/gems/environment'
-
 require 'bigdecimal'
 require 'json'
 require 'webrat'
