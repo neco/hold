@@ -5,7 +5,8 @@ describe Exchanges::EventInventory do
     FakeWeb.register_uri(
       :get,
       'https://www.eventinventory.com/login/index.cfm',
-      :body => fakeweb_template('event_inventory/login.html')
+      :body => fakeweb_template('event_inventory/login.html'),
+      :content_type => 'text/html'
     )
     FakeWeb.register_uri(
       :post,
@@ -16,12 +17,14 @@ describe Exchanges::EventInventory do
     FakeWeb.register_uri(
       :get,
       'https://www.eventinventory.com/basic/index.cfm',
-      :body => fakeweb_template('event_inventory/home.html')
+      :body => fakeweb_template('event_inventory/home.html'),
+      :content_type => 'text/html'
     )
     FakeWeb.register_uri(
       :get,
       'https://www.eventinventory.com/Basic/SystemOrders/Orders.aspx',
-      :body => fakeweb_template('event_inventory/orders.html')
+      :body => fakeweb_template('event_inventory/orders.html'),
+      :content_type => 'text/html'
     )
   end
 

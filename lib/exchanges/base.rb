@@ -1,3 +1,7 @@
+require 'bigdecimal'
+require 'json'
+require 'mechanize'
+
 module Exchanges
   Order = Struct.new(
     :order_id,
@@ -12,14 +16,39 @@ module Exchanges
     :status
   )
 
-  class Base < Webrat::MechanizeSession
-    SAFARI_4 = 'Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10_6_2; en-us) AppleWebKit/531.21.8 (KHTML, like Gecko) Version/4.0.4 Safari/531.21.10'
+  class Base
+    attr_reader :page
 
     def initialize(username, password)
       @username = username
       @password = password
-      super()
-      mechanize.user_agent = SAFARI_4
     end
+
+    def get(url)
+      @page = agent.get(url)
+    end
+    protected :get
+
+    def submit(form, button)
+      @page = agent.submit(form, button)
+    end
+    protected :submit
+
+    def agent
+      @agent ||= WWW::Mechanize.new do |agent|
+        agent.user_agent_alias = 'Mac Safari'
+      end
+    end
+    protected :agent
+
+    def dom
+      Nokogiri.parse(@page.body)
+    end
+    protected :dom
+
+    def json
+      JSON.parse(@page.body)
+    end
+    protected :json
   end
 end

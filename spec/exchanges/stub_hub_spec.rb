@@ -5,7 +5,8 @@ describe Exchanges::StubHub do
     FakeWeb.register_uri(
       :get,
       'https://myaccount.stubhub.com/login/Signin',
-      :body => fakeweb_template('stub_hub/login.html')
+      :body => fakeweb_template('stub_hub/login.html'),
+      :content_type => 'text/html'
     )
     FakeWeb.register_uri(
       :post,
@@ -22,22 +23,26 @@ describe Exchanges::StubHub do
     FakeWeb.register_uri(
       :get,
       'https://www.stubhub.com/?gSec=account&action=sell&which_info=salePending&',
-      :body => fakeweb_template('stub_hub/orders.html')
+      :body => fakeweb_template('stub_hub/orders.html'),
+      :content_type => 'text/html'
     )
     FakeWeb.register_uri(
       :get,
-      'https://myaccount.stubhub.com/rock-of-ages-new-york-tickets/rock-of-ages-new-york-1-16-2010-902526/',
-      :body => fakeweb_template('stub_hub/event_1.html')
+      'https://www.stubhub.com/rock-of-ages-new-york-tickets/rock-of-ages-new-york-1-16-2010-902526/',
+      :body => fakeweb_template('stub_hub/event_1.html'),
+      :content_type => 'text/html'
     )
     FakeWeb.register_uri(
       :get,
-      'https://myaccount.stubhub.com/wicked-broadway-tickets/wicked-new-york-1-17-2010-823340/',
-      :body => fakeweb_template('stub_hub/event_2.html')
+      'https://www.stubhub.com/wicked-broadway-tickets/wicked-new-york-1-17-2010-823340/',
+      :body => fakeweb_template('stub_hub/event_2.html'),
+      :content_type => 'text/html'
     )
     FakeWeb.register_uri(
       :get,
-      'https://myaccount.stubhub.com/ultimate-fighting-tickets/ufc-111-3-27-2010-920511/',
-      :body => fakeweb_template('stub_hub/event_3.html')
+      'https://www.stubhub.com/ultimate-fighting-tickets/ufc-111-3-27-2010-920511/',
+      :body => fakeweb_template('stub_hub/event_3.html'),
+      :content_type => 'text/html'
     )
   end
 

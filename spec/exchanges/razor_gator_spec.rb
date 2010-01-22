@@ -5,7 +5,8 @@ describe Exchanges::RazorGator do
     FakeWeb.register_uri(
       :get,
       'https://supplier.razorgator.com/login.aspx?ReturnUrl=/sss.aspx',
-      :body => fakeweb_template('razor_gator/login.html')
+      :body => fakeweb_template('razor_gator/login.html'),
+      :content_type => 'text/html'
     )
     FakeWeb.register_uri(
       :post,
@@ -16,12 +17,14 @@ describe Exchanges::RazorGator do
     FakeWeb.register_uri(
       :get,
       'https://supplier.razorgator.com/sss.aspx',
-      :body => fakeweb_template('razor_gator/orders.html')
+      :body => fakeweb_template('razor_gator/orders.html'),
+      :content_type => 'text/html'
     )
     FakeWeb.register_uri(
       :post,
       'https://supplier.razorgator.com/services/sss_ajax_service.asmx/GetNotProcessedOrders',
-      :body => fakeweb_template('razor_gator/orders.json')
+      :body => fakeweb_template('razor_gator/orders.json'),
+      :content_type => 'text/html'
     )
   end
 

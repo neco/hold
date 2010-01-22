@@ -1,8 +1,6 @@
 require 'hold'
 require 'exchanges'
 
-require 'spec'
-require 'spec/autorun'
 require 'fakeweb'
 require 'rack/test'
 require 'webrat'

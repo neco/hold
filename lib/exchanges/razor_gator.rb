@@ -5,7 +5,7 @@ module Exchanges
     def orders
       login('/sss.aspx')
 
-      response = mechanize.send(
+      @page = agent.send(
         :fetch_page,
         :uri => 'https://supplier.razorgator.com/services/sss_ajax_service.asmx/GetNotProcessedOrders',
         :verb => :post,
@@ -13,8 +13,7 @@ module Exchanges
         :headers => { 'Content-Type' => 'application/json; charset=UTF-8' }
       )
 
-      data = JSON.parse(response.body)
-      items = data['d']['Items'] || []
+      items = json['d']['Items'] || []
 
       items.collect do |item|
         Order.new(
@@ -33,10 +32,16 @@ module Exchanges
     end
 
     def login(path=nil)
-      visit "#{HOST}/login.aspx#{path ? "?ReturnUrl=#{path}" : nil }"
-      fill_in 'SSSLogin_UserName', :with => @username
-      fill_in 'SSSLogin_Password', :with => @password
-      click_button 'Submit'
+      unless @logged_in
+        get("#{HOST}/login.aspx#{path ? "?ReturnUrl=#{path}" : nil }")
+
+        @page = page.form_with(:name => 'Form2') do |form|
+          form['SSSLogin$UserName'] = @username
+          form['SSSLogin$Password'] = @password
+        end.click_button
+
+        @logged_in = true
+      end
     end
     private :login
   end

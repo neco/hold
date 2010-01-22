@@ -1,15 +1,6 @@
-require 'bigdecimal'
-require 'json'
-require 'webrat'
-require 'webrat/mechanize'
-require 'webrat/case_insensitive'
-require 'webrat/xpath_as_css'
-
-Webrat.configure do |config|
-  config.mode = :mechanize
+module Exchanges
+  autoload :Base, 'exchanges/base'
+  autoload :EventInventory, 'exchanges/event_inventory'
+  autoload :RazorGator, 'exchanges/razor_gator'
+  autoload :StubHub, 'exchanges/stub_hub'
 end
-
-require 'exchanges/base'
-require 'exchanges/event_inventory'
-require 'exchanges/razor_gator'
-require 'exchanges/stub_hub'

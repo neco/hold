@@ -32,25 +32,28 @@ module Exchanges
 
     def fetch_orders
       login
-      visit "#{HOST}/Basic/SystemOrders/Orders.aspx"
+      get "#{HOST}/Basic/SystemOrders/Orders.aspx"
     end
     protected :fetch_orders
 
     def fetch_order(id)
       fetch_orders
-
-      within("//td[text()=#{id}]/..") do |row|
-        row.click_button 'Details'
-      end
+      form = page.forms.first
+      input = ((dom / "//td[text()=#{id}]/../td").last / 'input').first[:name]
+      button = form.button_with(input)
+      submit(form, button)
     end
     protected :fetch_order
 
     def login
       unless @logged_in
-        visit "#{HOST}/login/index.cfm"
-        fill_in 'Username', :with => @username
-        fill_in 'Password', :with => @password
-        click_button ' Enter Control Panel '
+        get("#{HOST}/login/index.cfm")
+
+        page.form_with(:action => '/login/login.cfm') do |form|
+          form['Username'] = @username
+          form['Password'] = @password
+        end.click_button
+
         @logged_in = true
       end
     end
