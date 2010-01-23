@@ -23,15 +23,13 @@ module Exchanges
 
         Order.new(
           cells[8],
-          nil,
-          (total * BigDecimal.new('0.9')) / quantity,
           cells[1],
           venue,
           Time.parse(cells[2]),
-          quantity,
           cells[3],
           cells[4],
-          nil
+          quantity,
+          (total * BigDecimal.new('0.9')) / quantity
         )
       end
     end

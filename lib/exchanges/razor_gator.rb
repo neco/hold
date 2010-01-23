@@ -20,15 +20,13 @@ module Exchanges
       items.collect do |item|
         Order.new(
           item['Order_ID'].to_s,
-          Time.at(item['OrderItem_Date'].scan(/\d+/).first.to_i / 1000),
-          BigDecimal.new(item['WholeSaleCost'].to_s),
           item['EventNameDateTime'].split("\n").first,
           item['Venue_Name'],
           Time.at(item['Event_date_time'].scan(/\d+/).first.to_i / 1000),
-          item['Quantity'],
           item['Seating_Section'],
           item['Seating_Row'],
-          item['OrderStatusName']
+          item['Quantity'],
+          BigDecimal.new(item['WholeSaleCost'].to_s)
         )
       end
     end

@@ -47,15 +47,20 @@ describe Exchanges::StubHub do
   end
 
   before(:each) do
-    stub_hub = Exchanges::StubHub.new('username', 'password')
-    @orders = stub_hub.orders
+    @exchange = Exchanges::StubHub.new('username', 'password')
   end
 
-  it "provides access to the service name" do
-    Exchanges::StubHub.service.should == 'StubHub'
+  context ".service" do
+    it "provides access to the service name" do
+      Exchanges::StubHub.service.should == 'StubHub'
+    end
   end
 
-  context "order scraping" do
+  context "#orders" do
+    before(:each) do
+      @orders = @exchange.orders
+    end
+
     it "returns an array" do
       @orders.should be_an(Array)
     end
@@ -63,51 +68,43 @@ describe Exchanges::StubHub do
     it "returns all of the orders" do
       @orders.length.should == 3
     end
-  end
 
-  context "orders" do
-    before(:each) do
-      @order = @orders.first
-    end
+    context "returns orders that" do
+      before(:each) do
+        @order = @orders.first
+      end
 
-    it "have an order ID" do
-      @order.order_id.should == '30390265'
-    end
+      it "have a remote ID" do
+        @order.remote_id.should == '30390265'
+      end
 
-    it "have an order date" do
-      @order.order_date.should be_nil
-    end
+      it "have an event name" do
+        @order.event.should == 'Rock of Ages Tickets - New York'
+      end
 
-    it "have a ticket price" do
-      @order.ticket_price.should == BigDecimal.new('250.2')
-    end
+      it "have a venue name" do
+        @order.venue.should == 'Brooks Atkinson Theatre'
+      end
 
-    it "have an event name" do
-      @order.event.should == 'Rock of Ages Tickets - New York'
-    end
+      it "have an event date" do
+        @order.occurs_at.should == Time.local(2010, 1, 16, 20, 0, 0)
+      end
 
-    it "have a venue name" do
-      @order.venue.should == 'Brooks Atkinson Theatre'
-    end
+      it "have a section" do
+        @order.section.should == 'ORCH'
+      end
 
-    it "have an event date" do
-      @order.event_date.should == Time.local(2010, 1, 16, 20, 0, 0)
-    end
+      it "have a row" do
+        @order.row.should == 'G'
+      end
 
-    it "have a quantity" do
-      @order.quantity.should == 2
-    end
+      it "have a quantity" do
+        @order.quantity.should == 2
+      end
 
-    it "have a section" do
-      @order.section.should == 'ORCH'
-    end
-
-    it "have a row" do
-      @order.row.should == 'G'
-    end
-
-    it "have a status" do
-      @order.status.should be_nil
+      it "have a unit price" do
+        @order.unit_price.should == BigDecimal.new('250.2')
+      end
     end
   end
 

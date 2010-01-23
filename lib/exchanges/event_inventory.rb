@@ -19,15 +19,13 @@ module Exchanges
 
         Order.new(
           order_id,
-          Time.parse(cells[1]),
-          ticket_price,
           cells[2],
           cells[3],
           Time.parse(cells[4]),
-          cells[5].to_i,
           cells[6],
           cells[7],
-          cells[8]
+          cells[5].to_i,
+          ticket_price
         )
       end
     end

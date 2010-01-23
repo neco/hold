@@ -4,16 +4,14 @@ require 'mechanize'
 
 module Exchanges
   Order = Struct.new(
-    :order_id,
-    :order_date,
-    :ticket_price,
+    :remote_id,
     :event,
     :venue,
-    :event_date,
-    :quantity,
+    :occurs_at,
     :section,
     :row,
-    :status
+    :quantity,
+    :unit_price
   )
 
   class Base
