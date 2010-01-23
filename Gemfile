@@ -8,5 +8,6 @@ gem 'rake', '0.8.7'
 gem 'sinatra', '0.9.4'
 
 gem 'fakeweb', '1.2.8', :only => :testing
+gem 'machinist', '1.0.6', :only => :testing
 gem 'rspec', '1.2.9', :only => :testing
 gem 'webrat', '0.7.0', :only => :testing

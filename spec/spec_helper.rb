@@ -1,6 +1,9 @@
+ENV['RACK_ENV'] = 'test'
+
 require 'hold'
 require 'exchanges'
 
+require 'blueprints'
 require 'fakeweb'
 require 'rack/test'
 require 'webrat'
@@ -11,12 +14,14 @@ Webrat.configure do |config|
   config.mode = :rack
 end
 
-set :environment, :test
-
 Spec::Runner.configure do |config|
   include Rack::Test::Methods
   include Webrat::Methods
   include Webrat::Matchers
+
+  config.before(:each) do
+    DataMapper.auto_migrate!
+  end
 
   def app
     Sinatra::Application
