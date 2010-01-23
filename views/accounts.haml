@@ -10,7 +10,7 @@
   %tbody
     - @accounts.each do |account|
       %tr
-        %td= account.exchange
+        %td= account.exchange_model.service
         %td= account.username
         %td= account.password
 

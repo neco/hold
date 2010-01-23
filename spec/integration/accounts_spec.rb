@@ -13,7 +13,7 @@ describe "The accounts page" do
 
   it "should list the most recent accounts" do
     response_body.should have_selector('table tbody tr:first') do |row|
-      row.should contain(@account.exchange)
+      row.should contain(@account.exchange_model.service)
       row.should contain(@account.username)
       row.should contain(@account.password)
     end
