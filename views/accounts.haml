@@ -1,16 +1,18 @@
 %h2 Exchange Accounts
 
 %table
-  %tr
-    %th Exchange
-    %th Username
-    %th Password
-
-  - @accounts.each do |account|
+  %thead
     %tr
-      %td= account.exchange
-      %td= account.username
-      %td= account.password
+      %th Exchange
+      %th Username
+      %th Password
+
+  %tbody
+    - @accounts.each do |account|
+      %tr
+        %td= account.exchange
+        %td= account.username
+        %td= account.password
 
 %form{ :method => 'post' }
   %fieldset

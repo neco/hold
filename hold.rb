@@ -8,7 +8,7 @@ require 'lib/models'
 set :haml, { :attr_wrapper => '"' }
 
 get '/accounts' do
-  @accounts = Account.all
+  @accounts = Account.all(:order => [:id.desc])
   haml :accounts
 end
 
@@ -20,6 +20,11 @@ post '/accounts' do
   )
 
   redirect '/accounts'
+end
+
+get '/orders' do
+  @orders = Order.all(:order => [:id.desc])
+  haml :orders
 end
 
 get '/stylesheets/master.css' do
