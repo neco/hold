@@ -15,6 +15,10 @@ class Account
   property :updated_at, DateTime
 
   has n, :orders, :order => [:created_at.desc]
+
+  def exchange_model
+    Exchanges.get(exchange)
+  end
 end
 
 class Order
