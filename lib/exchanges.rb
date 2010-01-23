@@ -1,6 +1,10 @@
 module Exchanges
-  autoload :Base, 'exchanges/base'
-  autoload :EventInventory, 'exchanges/event_inventory'
-  autoload :RazorGator, 'exchanges/razor_gator'
-  autoload :StubHub, 'exchanges/stub_hub'
+  autoload :Base, 'lib/exchanges/base'
+  autoload :EventInventory, 'lib/exchanges/event_inventory'
+  autoload :RazorGator, 'lib/exchanges/razor_gator'
+  autoload :StubHub, 'lib/exchanges/stub_hub'
+
+  def self.get(name)
+    const_get(name.to_sym)
+  end
 end

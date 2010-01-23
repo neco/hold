@@ -1,7 +1,6 @@
 ENV['RACK_ENV'] = 'test'
 
 require 'hold'
-require 'exchanges'
 
 require 'blueprints'
 require 'fakeweb'

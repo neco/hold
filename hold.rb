@@ -4,6 +4,7 @@ require 'sinatra'
 
 require 'lib/config'
 require 'lib/models'
+require 'lib/exchanges'
 
 set :haml, { :attr_wrapper => '"' }
 
