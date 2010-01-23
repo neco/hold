@@ -43,6 +43,10 @@ describe Exchanges::EventInventory do
     @orders = event_inventory.orders
   end
 
+  it "provides access to the service name" do
+    Exchanges::EventInventory.service.should == 'Event Inventory'
+  end
+
   context "order scraping" do
     it "returns an array" do
       @orders.should be_an(Array)

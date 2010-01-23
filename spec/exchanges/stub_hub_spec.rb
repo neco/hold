@@ -51,6 +51,10 @@ describe Exchanges::StubHub do
     @orders = stub_hub.orders
   end
 
+  it "provides access to the service name" do
+    Exchanges::StubHub.service.should == 'StubHub'
+  end
+
   context "order scraping" do
     it "returns an array" do
       @orders.should be_an(Array)

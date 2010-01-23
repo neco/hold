@@ -33,6 +33,10 @@ describe Exchanges::RazorGator do
     @orders = event_inventory.orders
   end
 
+  it "provides access to the service name" do
+    Exchanges::RazorGator.service.should == 'RazorGator'
+  end
+
   context "order scraping" do
     it "returns an array" do
       @orders.should be_an(Array)

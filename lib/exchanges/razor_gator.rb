@@ -2,6 +2,8 @@ module Exchanges
   class RazorGator < Base
     HOST = 'https://supplier.razorgator.com'.freeze
 
+    self.service = 'RazorGator'
+
     def orders
       login('/sss.aspx')
 

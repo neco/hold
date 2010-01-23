@@ -17,6 +17,8 @@ module Exchanges
   )
 
   class Base
+    class_inheritable_accessor :service
+
     attr_reader :page
 
     def initialize(username, password)

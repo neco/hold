@@ -2,6 +2,8 @@ module Exchanges
   class EventInventory < Base
     HOST = 'https://www.eventinventory.com'.freeze
 
+    self.service = 'Event Inventory'
+
     def orders
       fetch_orders
 

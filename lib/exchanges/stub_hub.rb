@@ -2,6 +2,8 @@ module Exchanges
   class StubHub < Base
     HOST = 'https://myaccount.stubhub.com'.freeze
 
+    self.service = 'StubHub'
+
     def orders
       login
       get("#{HOST}/?gSec=account&action=sell&which_info=salePending")
