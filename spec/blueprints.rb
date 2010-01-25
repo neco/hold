@@ -16,7 +16,7 @@ Sham.datetime {
   month = (1..12).to_a[12 * rand]
   day = (1..28).to_a[28 * rand]
   hour = (14..22).to_a[9 * rand]
-  Time.local(year, month, day, hour)
+  Time.utc(year, month, day, hour)
 }
 
 

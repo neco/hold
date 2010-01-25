@@ -87,7 +87,7 @@ describe Exchanges::StubHub do
       end
 
       it "have an event date" do
-        @order.occurs_at.should == Time.local(2010, 1, 16, 20, 0, 0)
+        @order.occurs_at.should == Time.utc(2010, 1, 17, 1, 0, 0)
       end
 
       it "have a section" do

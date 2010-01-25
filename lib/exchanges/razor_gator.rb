@@ -22,7 +22,7 @@ module Exchanges
           item['Order_ID'].to_s,
           item['EventNameDateTime'].split("\n").first,
           item['Venue_Name'],
-          Time.at(item['Event_date_time'].scan(/\d+/).first.to_i / 1000),
+          Time.at(item['Event_date_time'].scan(/\d+/).first.to_i / 1000).utc,
           item['Seating_Section'],
           item['Seating_Row'],
           item['Quantity'],
@@ -46,4 +46,3 @@ module Exchanges
     private :login
   end
 end
-

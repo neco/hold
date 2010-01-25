@@ -79,7 +79,7 @@ describe Exchanges::EventInventory do
       end
 
       it "have an event date" do
-        @order.occurs_at.should == Time.local(2010, 1, 18, 14, 0, 0)
+        @order.occurs_at.should == Time.utc(2010, 1, 18, 19, 0, 0)
       end
 
       it "have a section" do

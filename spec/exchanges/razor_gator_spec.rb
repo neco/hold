@@ -69,7 +69,7 @@ describe Exchanges::RazorGator do
       end
 
       it "have an event date" do
-        @order.occurs_at.should == Time.local(2009, 8, 28, 22, 5, 0)
+        @order.occurs_at.should == Time.utc(2009, 8, 29, 2, 5, 0)
       end
 
       it "have a section" do
