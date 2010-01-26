@@ -96,15 +96,19 @@ class Order
     end
   end
 
-  def connect_to_pos 
+  def connect_to_pos(&block)
     connection = begin
-      puts "DBI:ODBC:#{POS[:dsn]}, #{POS[:database]}, #{POS[:password]}"
       DBI.connect("DBI:ODBC:#{POS[:dsn]}", POS[:database], POS[:password])
     rescue DBI::DatabaseError
       unless @opened_tunnel
-        system "ssh -f -N -L 1433:localhost:1433 #{POS[:user]}@#{POS[:host]} -p #{POS[:port]}"
-        @opened_tunnel = true
-        retry
+        begin
+          system "ssh -f -N -L 1433:localhost:1433 #{POS[:user]}@#{POS[:host]} -p #{POS[:port]}"
+          @opened_tunnel = true
+          retry
+        rescue
+        end
+      else
+        raise
       end
     end
 
