@@ -1,3 +1,14 @@
+require 'dbi'
+
+POS = {
+  :dsn => 'POS',
+  :database => 'indux',
+  :password => '613TALjmDK',
+  :host => '38.105.128.254', # pos.neco.com
+  :user => 'drewadmin',
+  :port => 3341
+}
+
 configure :development do
   DATABASE = "sqlite3://#{File.join(Dir.pwd, 'tmp', 'db.sqlite3')}".freeze
 end

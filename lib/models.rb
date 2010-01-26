@@ -1,3 +1,4 @@
+require 'dbi'
 require 'dm-core'
 require 'dm-aggregates'
 require 'dm-timestamps'
@@ -68,4 +69,49 @@ class Order
   property :updated_at, DateTime
 
   belongs_to :account
+
+  def event_name
+    name = event.dup
+    name.sub!('/', ' vs. ')
+    name
+  end
+
+  def tickets
+    connect_to_pos do |pos|
+      procedure = pos.prepare('EXEC neco_adHocFindTickets ?, ?, ?, ?, ?')
+
+      procedure.bind_param(1, section, false)
+      procedure.bind_param(2, row, false)
+      procedure.bind_param(3, event_name, false)
+      procedure.bind_param(4, occurs_at.strftime('%m-%d-%Y %H:%M'), false)
+      procedure.bind_param(5, '%', false)
+
+      procedure.execute
+
+      data = procedure.fetch_all
+
+      procedure.finish
+
+      data
+    end
+  end
+
+  def connect_to_pos 
+    connection = begin
+      puts "DBI:ODBC:#{POS[:dsn]}, #{POS[:database]}, #{POS[:password]}"
+      DBI.connect("DBI:ODBC:#{POS[:dsn]}", POS[:database], POS[:password])
+    rescue DBI::DatabaseError
+      unless @opened_tunnel
+        system "ssh -f -N -L 1433:localhost:1433 #{POS[:user]}@#{POS[:host]} -p #{POS[:port]}"
+        @opened_tunnel = true
+        retry
+      end
+    end
+
+    if connection
+      yield connection
+    else
+      raise 'Could not connect to POS'
+    end
+  end
 end
