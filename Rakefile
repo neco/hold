@@ -11,3 +11,12 @@ Spec::Rake::SpecTask.new(:rcov) do |spec|
   spec.pattern = 'spec/**/*_spec.rb'
   spec.rcov = true
 end
+
+desc "Sync with the exchanges"
+task :sync do
+  require 'hold'
+
+  Account.all.each do |account|
+    account.sync
+  end
+end
