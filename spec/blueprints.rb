@@ -2,14 +2,13 @@ require 'machinist/data_mapper'
 
 # Shams
 
-Sham.exchange { %w(EventInventory RazorGator StubHub)[3 * rand] }
+Sham.integer { (1_000_000 * rand).round }
 Sham.username { |index| "Username #{index}" }
 Sham.password { |index| "Password #{index}" }
 Sham.event { |index| "Event #{index}" }
 Sham.venue { |index| "Venue #{index}" }
 Sham.section { |index| "Section #{index}" }
 Sham.row { |index| "Row #{index}" }
-Sham.quantity { (10 * rand).round }
 
 Sham.datetime {
   year = Date.today.year
@@ -23,16 +22,18 @@ Sham.datetime {
 # Blueprints
 
 Account.blueprint do
-  exchange
+  exchange { %w(EventInventory RazorGator StubHub)[3 * rand] }
   username
   password
 end
 
 Order.blueprint do
+  account
+  remote_id { Sham.integer }
   event
   venue
   occurs_at { Sham.datetime }
   section
   row
-  quantity
+  quantity { Sham.integer }
 end

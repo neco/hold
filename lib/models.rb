@@ -2,6 +2,7 @@ require 'dbi'
 require 'dm-core'
 require 'dm-aggregates'
 require 'dm-timestamps'
+require 'state_machine'
 
 DataMapper.setup(:default, DATABASE)
 
@@ -55,8 +56,8 @@ class Order
   include DataMapper::Resource
 
   property :id, Serial
-  property :account_id, Integer
-  property :remote_id, String, :length => 20
+  property :account_id, Integer, :required => true
+  property :remote_id, String, :length => 20, :required => true
   property :event, String, :length => 100, :required => true
   property :venue, String, :length => 100, :required => true
   property :occurs_at, DateTime, :required => true
@@ -65,10 +66,23 @@ class Order
   property :quantity, Integer, :required => true
   property :unit_price, BigDecimal
   property :placed_at, DateTime
+  property :state, String, :required => true, :default => 'created'
   property :created_at, DateTime
   property :updated_at, DateTime
 
   belongs_to :account
+  has n, :tickets
+
+  state_machine :initial => :created do
+    state :created
+    state :synced
+    state :failed
+    state :on_hold
+
+    event(:mark_as_synced) { transition :created => :synced }
+    event(:mark_as_failed) { transition :created => :failed }
+    event(:place_on_hold) { transition :synced => :on_hold }
+  end
 
   def event_name
     name = event.dup
@@ -76,7 +90,7 @@ class Order
     name
   end
 
-  def tickets
+  def sync
     connect_to_pos do |pos|
       procedure = pos.prepare('EXEC neco_adHocFindTickets ?, ?, ?, ?, ?')
 
@@ -92,7 +106,25 @@ class Order
 
       procedure.finish
 
-      data
+      if data.any?
+        data.each do |ticket|
+          tickets.create(
+            :ticket_id => ticket[0],
+            :group_id => ticket[1],
+            :section => ticket[2],
+            :row => ticket[3],
+            :seat => ticket[4],
+            :event => ticket[5],
+            :venue => ticket[7],
+            :city => ticket[8],
+            :occurs_at => ticket[6]
+          )
+        end
+
+        mark_as_synced
+      else
+        mark_as_failed
+      end
     end
   end
 
@@ -118,4 +150,25 @@ class Order
       raise 'Could not connect to POS'
     end
   end
+  private :connect_to_pos
+end
+
+class Ticket
+  include DataMapper::Resource
+
+  property :id, Serial
+  property :order_id, Integer, :required => true
+  property :ticket_id, Integer, :required => true
+  property :group_id, Integer, :required => true
+  property :section, String, :length => 20, :required => true
+  property :row, String, :length => 20, :required => true
+  property :seat, String, :length => 20, :required => true
+  property :event, String, :length => 100, :required => true
+  property :venue, String, :length => 100, :required => true
+  property :city, String, :length => 100, :required => true
+  property :occurs_at, DateTime, :required => true
+  property :created_at, DateTime
+  property :updated_at, DateTime
+
+  belongs_to :order
 end

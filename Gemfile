@@ -17,4 +17,5 @@ gem 'racksh', '0.9.4.2', :only => :development
 gem 'rake', '0.8.7'
 gem 'rspec', '1.2.9', :only => :testing
 gem 'sinatra', '0.9.4'
+gem 'state_machine', '0.8.0'
 gem 'webrat', '0.7.0', :only => :testing
