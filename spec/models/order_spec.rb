@@ -154,4 +154,56 @@ describe Order do
       @order.state.should == 'failed'
     end
   end
+
+  context "#hold" do
+    it "use the highest seat numbers in the block first" do
+      @tickets = [
+        Ticket.make(:seat => '10'),
+        Ticket.make(:seat => '11'),
+        Ticket.make(:seat => '12')
+      ]
+
+      @tickets[0].should_not_receive(:hold)
+      @tickets[1].should_receive(:hold)
+      @tickets[2].should_receive(:hold)
+
+      @order = Order.make(:quantity => 2)
+      @order.stub(:tickets).and_return(@tickets)
+
+      @order.hold
+    end
+
+    it "take the smallest block in the row that won't leave a single ticket" do
+      @tickets = [
+        Ticket.make(:seat => '20'),
+        Ticket.make(:seat => '19'),
+        Ticket.make(:seat => '18'),
+        Ticket.make(:seat => '17'),
+        # gap
+        Ticket.make(:seat => '15'),
+        Ticket.make(:seat => '14'),
+        Ticket.make(:seat => '13'),
+        # gap
+        Ticket.make(:seat => '11'),
+        Ticket.make(:seat => '10')
+      ]
+
+      @tickets[0].should_not_receive(:hold)
+      @tickets[1].should_not_receive(:hold)
+      @tickets[2].should_not_receive(:hold)
+      @tickets[3].should_not_receive(:hold)
+      # gap
+      @tickets[4].should_not_receive(:hold)
+      @tickets[5].should_not_receive(:hold)
+      @tickets[6].should_not_receive(:hold)
+      # gap
+      @tickets[7].should_receive(:hold)
+      @tickets[8].should_receive(:hold)
+
+      @order = Order.make(:quantity => 2)
+      @order.stub(:tickets).and_return(@tickets)
+
+      @order.hold
+    end
+  end
 end

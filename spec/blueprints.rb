@@ -1,4 +1,6 @@
+require 'faker'
 require 'machinist/data_mapper'
+
 
 # Shams
 
@@ -7,8 +9,10 @@ Sham.username { |index| "Username #{index}" }
 Sham.password { |index| "Password #{index}" }
 Sham.event { |index| "Event #{index}" }
 Sham.venue { |index| "Venue #{index}" }
+Sham.city { Faker::Address.city }
 Sham.section { |index| "Section #{index}" }
 Sham.row { |index| "Row #{index}" }
+Sham.seat { |index| "Seat #{index}" }
 
 Sham.datetime {
   year = Date.today.year
@@ -36,4 +40,17 @@ Order.blueprint do
   section
   row
   quantity { Sham.integer }
+end
+
+Ticket.blueprint do
+  order
+  ticket_id { Sham.integer }
+  group_id { Sham.integer }
+  section
+  row
+  seat
+  event
+  venue
+  city
+  occurs_at { Sham.datetime }
 end

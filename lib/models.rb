@@ -128,6 +128,44 @@ class Order
     end
   end
 
+  def hold
+    big_enough = ticket_blocks.select { |block| block.length >= quantity }
+
+    sized_up = big_enough.inject({}) do |map, block|
+      map[block.length] = block unless map[block.length]
+      map
+    end
+
+    block = if sized_up[quantity]
+      sized_up[quantity]
+    elsif sized_up.select { |size, block| size > quantity + 1 }.any?
+      sized_up[sized_up.keys.sort.first]
+    else
+      sized_up[quantity + 1]
+    end
+
+    block[0..(quantity - 1)].each(&:hold)
+  end
+
+  def ticket_blocks
+    tickets.sort_by { |t| t.seat.to_i }.reverse.inject([]) do |blocks, ticket|
+      if blocks.empty?
+        blocks << [ticket]
+      else
+        block = blocks.last
+
+        if block.last.seat.to_i == ticket.seat.to_i + 1
+          block << ticket
+        else
+          blocks << [ticket]
+        end
+      end
+
+      blocks
+    end
+  end
+  private :ticket_blocks
+
   def connect_to_pos(&block)
     connection = begin
       DBI.connect("DBI:ODBC:#{POS[:dsn]}", POS[:database], POS[:password])
@@ -160,13 +198,13 @@ class Ticket
   property :order_id, Integer, :required => true
   property :ticket_id, Integer, :required => true
   property :group_id, Integer, :required => true
-  property :section, String, :length => 20, :required => true
-  property :row, String, :length => 20, :required => true
-  property :seat, String, :length => 20, :required => true
   property :event, String, :length => 100, :required => true
   property :venue, String, :length => 100, :required => true
   property :city, String, :length => 100, :required => true
   property :occurs_at, DateTime, :required => true
+  property :section, String, :length => 20, :required => true
+  property :row, String, :length => 20, :required => true
+  property :seat, String, :length => 20, :required => true
   property :created_at, DateTime
   property :updated_at, DateTime
 
