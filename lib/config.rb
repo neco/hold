@@ -1,6 +1,6 @@
 require 'dbi'
 
-POS = {
+POS_DB = {
   :dsn => 'POS',
   :database => 'indux',
   :password => '613TALjmDK',

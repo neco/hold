@@ -37,40 +37,26 @@ class Order
   end
 
   def sync
-    connect_to_pos do |pos|
-      procedure = pos.prepare('EXEC neco_adHocFindTickets ?, ?, ?, ?, ?')
+    data = POS.find_tickets(event_name, occurs_at, section, row)
 
-      procedure.bind_param(1, section, false)
-      procedure.bind_param(2, row, false)
-      procedure.bind_param(3, event_name, false)
-      procedure.bind_param(4, occurs_at.strftime('%m-%d-%Y %H:%M'), false)
-      procedure.bind_param(5, '%', false)
-
-      procedure.execute
-
-      data = procedure.fetch_all
-
-      procedure.finish
-
-      if data.any?
-        data.each do |ticket|
-          tickets.create(
-            :ticket_id => ticket[0],
-            :group_id => ticket[1],
-            :section => ticket[2],
-            :row => ticket[3],
-            :seat => ticket[4],
-            :event => ticket[5],
-            :venue => ticket[7],
-            :city => ticket[8],
-            :occurs_at => ticket[6]
-          )
-        end
-
-        mark_as_synced
-      else
-        mark_as_failed
+    if data.any?
+      data.each do |ticket|
+        tickets.create(
+          :ticket_id => ticket[0],
+          :group_id => ticket[1],
+          :section => ticket[2],
+          :row => ticket[3],
+          :seat => ticket[4],
+          :event => ticket[5],
+          :venue => ticket[7],
+          :city => ticket[8],
+          :occurs_at => ticket[6]
+        )
       end
+
+      mark_as_synced
+    else
+      mark_as_failed
     end
   end
 
@@ -111,28 +97,4 @@ class Order
     end
   end
   private :ticket_blocks
-
-  def connect_to_pos(&block)
-    connection = begin
-      DBI.connect("DBI:ODBC:#{POS[:dsn]}", POS[:database], POS[:password])
-    rescue DBI::DatabaseError
-      unless @opened_tunnel
-        begin
-          system "ssh -f -N -L 1433:localhost:1433 #{POS[:user]}@#{POS[:host]} -p #{POS[:port]}"
-          @opened_tunnel = true
-          retry
-        rescue
-        end
-      else
-        raise
-      end
-    end
-
-    if connection
-      yield connection
-    else
-      raise 'Could not connect to POS'
-    end
-  end
-  private :connect_to_pos
 end
