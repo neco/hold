@@ -37,7 +37,7 @@ class Order
   end
 
   def sync
-    data = POS.find_tickets(event_name, occurs_at, section, row)
+    data = pos.find_tickets(event_name, occurs_at, section, row)
 
     if data.any?
       data.each do |ticket|
@@ -70,13 +70,15 @@ class Order
 
     block = if sized_up[quantity]
       sized_up[quantity]
-    elsif sized_up.select { |size, block| size > quantity + 1 }.any?
-      sized_up[sized_up.keys.sort.first]
+    elsif (blocks = sized_up.select { |size, block| size > quantity + 1 }).any?
+      sized_up[blocks.first.first]
     else
       sized_up[quantity + 1]
     end
 
-    block[0..(quantity - 1)].each(&:hold)
+    first, last = block[0..(quantity - 1)].values_at(-1, 0)
+    pos.hold_tickets(first.ticket_id, last.ticket_id)
+    place_on_hold
   end
 
   def ticket_blocks
@@ -97,4 +99,9 @@ class Order
     end
   end
   private :ticket_blocks
+
+  def pos
+    @pos ||= POS.new
+  end
+  private :pos
 end

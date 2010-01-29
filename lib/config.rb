@@ -1,7 +1,7 @@
 require 'dbi'
 
 POS_DB = {
-  :dsn => 'POS',
+  :dsn => 'DBI:ODBC:POS',
   :database => 'indux',
   :password => '613TALjmDK',
   :host => 'pos.neco.com',

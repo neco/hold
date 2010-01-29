@@ -1,6 +1,11 @@
 require 'spec_helper'
 
 describe Order do
+  before(:each) do
+    @pos = POS.new
+    POS.stub(:new).and_return(@pos)
+  end
+
   context "state machine" do
     it "is initialized in state created" do
       Order.new.state.should == 'created'
@@ -50,13 +55,13 @@ describe Order do
         [1462194] + ticket,
       ]
 
-      POS.stub(:find_tickets).and_return(@tickets)
+      @pos.stub(:find_tickets).and_return(@tickets)
 
       @order = Order.make
     end
 
     it "finds tickets for the order's event, seat, and row" do
-      POS.should_receive(:find_tickets).with(@order.event_name, @order.occurs_at, @order.section, @order.row).and_return(@tickets)
+      @pos.should_receive(:find_tickets).with(@order.event_name, @order.occurs_at, @order.section, @order.row).and_return(@tickets)
       @order.sync
     end
 
@@ -86,61 +91,57 @@ describe Order do
 
     it "marks the order state as failed if no ticket results are returned" do
       @order.state.should == 'created'
-      POS.should_receive(:find_tickets).and_return([])
+      @pos.should_receive(:find_tickets).and_return([])
       @order.sync
       @order.state.should == 'failed'
     end
   end
 
   context "#hold" do
+    before(:each) do
+      @order = Order.make(:quantity => 2, :state => 'synced')
+    end
+
     it "use the highest seat numbers in the block first" do
-      @tickets = [
-        Ticket.make(:seat => '10'),
-        Ticket.make(:seat => '11'),
-        Ticket.make(:seat => '12')
-      ]
+      @order.stub(:tickets).and_return([
+        Ticket.make(:ticket_id => 1010, :seat => '10'),
+        Ticket.make(:ticket_id => 1011, :seat => '11'),
+        Ticket.make(:ticket_id => 1012, :seat => '12')
+      ])
 
-      @tickets[0].should_not_receive(:hold)
-      @tickets[1].should_receive(:hold)
-      @tickets[2].should_receive(:hold)
-
-      @order = Order.make(:quantity => 2)
-      @order.stub(:tickets).and_return(@tickets)
+      @pos.should_receive(:hold_tickets).with(1011, 1012)
 
       @order.hold
     end
 
     it "take the smallest block in the row that won't leave a single ticket" do
-      @tickets = [
-        Ticket.make(:seat => '20'),
-        Ticket.make(:seat => '19'),
-        Ticket.make(:seat => '18'),
-        Ticket.make(:seat => '17'),
+      @order.stub(:tickets).and_return([
+        Ticket.make(:ticket_id => 1010, :seat => '10'),
+        Ticket.make(:ticket_id => 1011, :seat => '11'),
+        Ticket.make(:ticket_id => 1012, :seat => '12'),
         # gap
-        Ticket.make(:seat => '15'),
-        Ticket.make(:seat => '14'),
-        Ticket.make(:seat => '13'),
-        # gap
-        Ticket.make(:seat => '11'),
-        Ticket.make(:seat => '10')
-      ]
+        Ticket.make(:ticket_id => 1014, :seat => '14'),
+        Ticket.make(:ticket_id => 1015, :seat => '15'),
+        Ticket.make(:ticket_id => 1016, :seat => '16'),
+        Ticket.make(:ticket_id => 1017, :seat => '17'),
+      ])
 
-      @tickets[0].should_not_receive(:hold)
-      @tickets[1].should_not_receive(:hold)
-      @tickets[2].should_not_receive(:hold)
-      @tickets[3].should_not_receive(:hold)
-      # gap
-      @tickets[4].should_not_receive(:hold)
-      @tickets[5].should_not_receive(:hold)
-      @tickets[6].should_not_receive(:hold)
-      # gap
-      @tickets[7].should_receive(:hold)
-      @tickets[8].should_receive(:hold)
-
-      @order = Order.make(:quantity => 2)
-      @order.stub(:tickets).and_return(@tickets)
+      @pos.should_receive(:hold_tickets).with(1016, 1017)
 
       @order.hold
+    end
+
+    it "marks the order state as on hold" do
+      @order.stub(:tickets).and_return([
+        Ticket.make(:ticket_id => 1010, :seat => '10'),
+        Ticket.make(:ticket_id => 1011, :seat => '11')
+      ])
+
+      @pos.stub(:hold_tickets)
+
+      @order.state.should == 'synced'
+      @order.hold
+      @order.state.should == 'on_hold'
     end
   end
 end
