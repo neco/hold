@@ -50,6 +50,12 @@ describe Exchanges::StubHub do
     @exchange = Exchanges::StubHub.new('username', 'password')
   end
 
+  context ".broker_id" do
+    it "provides access to the broker ID" do
+      Exchanges::StubHub.broker_id.should == 1819
+    end
+  end
+
   context ".service" do
     it "provides access to the service name" do
       Exchanges::StubHub.service.should == 'StubHub'

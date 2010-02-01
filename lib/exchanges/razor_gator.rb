@@ -2,6 +2,7 @@ module Exchanges
   class RazorGator < Base
     HOST = 'https://supplier.razorgator.com'.freeze
 
+    self.broker_id = 1653
     self.service = 'RazorGator'
 
     def orders

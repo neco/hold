@@ -32,6 +32,12 @@ describe Exchanges::RazorGator do
     @exchange = Exchanges::RazorGator.new('username', 'password')
   end
 
+  context ".broker_id" do
+    it "provides access to the broker ID" do
+      Exchanges::RazorGator.broker_id.should == 1653
+    end
+  end
+
   context ".service" do
     it "provides access to the service name" do
       Exchanges::RazorGator.service.should == 'RazorGator'

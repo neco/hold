@@ -42,6 +42,12 @@ describe Exchanges::EventInventory do
     @exchange = Exchanges::EventInventory.new('username', 'password')
   end
 
+  context ".broker_id" do
+    it "provides access to the broker ID" do
+      Exchanges::EventInventory.broker_id.should == 1276
+    end
+  end
+
   context ".service" do
     it "provides access to the service name" do
       Exchanges::EventInventory.service.should == 'Event Inventory'
