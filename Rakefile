@@ -21,6 +21,10 @@ task :sync => :environment do
   Account.all.each do |account|
     account.sync
   end
+
+  Order.all(:state => 'created').each do |order|
+    order.sync
+  end
 end
 
 namespace :db do
