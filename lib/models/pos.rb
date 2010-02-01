@@ -12,8 +12,8 @@ class POS
     end
   end
 
-  def hold_tickets(first_ticket_id, last_ticket_id)
-    expires_date_time = nil
+  def hold_tickets(first_ticket_id, last_ticket_id, occurs_at)
+    expires_date_time = occurs_at + (60 * 60 * 24 * 180)
     sold_price = nil
     client_broker_id = nil
     broker_csrid = nil

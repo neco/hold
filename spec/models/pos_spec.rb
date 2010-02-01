@@ -108,7 +108,7 @@ describe POS do
 
   context "#hold_tickets" do
     before(:each) do
-      @ticket_ids = [1462193, 1462194]
+      @now = Time.now
 
       @procedure = stub('procedure')
       @procedure.stub(:bind_param)
@@ -125,7 +125,7 @@ describe POS do
     end
 
     def execute_query
-      @pos.hold_tickets(*@ticket_ids)
+      @pos.hold_tickets(1462193, 1462194, @now)
     end
 
     it_should_behave_like "a query method"
@@ -145,8 +145,9 @@ describe POS do
       execute_query
     end
 
-    it "sets the third parameter of the prepared query to the expiration" do
-      @procedure.should_receive(:bind_param).with(3, nil, false)
+    it "sets the third parameter of the prepared query to the expiration (180 days from the date of the event)" do
+      six_months_from_now = @now + (60 * 60 * 24 * 180)
+      @procedure.should_receive(:bind_param).with(3, six_months_from_now, false)
       execute_query
     end
 
