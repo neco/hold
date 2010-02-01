@@ -62,6 +62,10 @@ task :sync => :environment do
       BODY
     end
   end
+
+  Order.all(:state => 'synced').each do |order|
+    order.hold
+  end
 end
 
 namespace :db do
