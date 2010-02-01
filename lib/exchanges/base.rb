@@ -36,6 +36,7 @@ module Exchanges
 
     def agent
       @agent ||= WWW::Mechanize.new do |agent|
+        agent.keep_alive = false # workaround for issue with SSL verification
         agent.user_agent_alias = 'Mac Safari'
       end
     end
