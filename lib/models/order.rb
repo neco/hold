@@ -34,6 +34,7 @@ class Order
     name = event.dup
     name.sub!('/', ' vs. ')
     name.sub!(/\s+-\s+[\w\s]+\Z/, '')
+    name.sub!(/\s+\([\w\s]+\)\Z/, '')
     name.sub!(/\s+Tickets\Z/, '')
     name = name.split(/\s+at\s+/).reverse.join(' vs. ') if name =~ /\sat\s/
     name

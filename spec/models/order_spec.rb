@@ -52,6 +52,11 @@ describe Order do
       order.event_name.should == 'Houston Rodeo'
     end
 
+    it "removes anything following in parenthesis" do
+      order = Order.new(:event => 'Super Bowl XLIV Tickets (Indianapolis Colts vs New Orleans Saints)')
+      order.event_name.should == 'Super Bowl XLIV'
+    end
+
     it "replaces 'at' with 'vs.' and swaps teams" do
       order = Order.new(:event => 'Washington Wizards at New York Knicks Tickets')
       order.event_name.should == 'New York Knicks vs. Washington Wizards'
