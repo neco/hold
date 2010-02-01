@@ -108,12 +108,12 @@ describe POS do
 
   context "#hold_tickets" do
     before(:each) do
-      @now = Time.now
+      @now = DateTime.now
+      @order = Order.make(:occurs_at => @now)
 
       @procedure = stub('procedure')
       @procedure.stub(:bind_param)
       @procedure.stub(:execute)
-      #@procedure.stub(:fetch_all).and_return(@tickets)
       @procedure.stub(:finish)
 
       @connection = stub('POS Database')
@@ -125,7 +125,7 @@ describe POS do
     end
 
     def execute_query
-      @pos.hold_tickets(1462193, 1462194, @now)
+      @pos.hold_tickets(@order, 1462193, 1462194)
     end
 
     it_should_behave_like "a query method"
@@ -152,12 +152,12 @@ describe POS do
     end
 
     it "sets the fourth parameter of the prepared query to the sold price" do
-      @procedure.should_receive(:bind_param).with(4, nil, false)
+      @procedure.should_receive(:bind_param).with(4, @order.unit_price.to_f.to_s, false)
       execute_query
     end
 
     it "sets the fifth parameter of the prepared query to the client broker ID" do
-      @procedure.should_receive(:bind_param).with(5, nil, false)
+      @procedure.should_receive(:bind_param).with(5, @order.account.exchange_model.broker_id, false)
       execute_query
     end
 
@@ -167,7 +167,7 @@ describe POS do
     end
 
     it "sets the seventh parameter of the prepared query to the POS user ID" do
-      @procedure.should_receive(:bind_param).with(7, nil, false)
+      @procedure.should_receive(:bind_param).with(7, POS::USER_ID, false)
       execute_query
     end
 
@@ -176,8 +176,8 @@ describe POS do
       execute_query
     end
 
-    it "sets the ninth parameter of the prepared query to the internal notes" do
-      @procedure.should_receive(:bind_param).with(9, nil, false)
+    it "sets the ninth parameter of the prepared query to the internal notes (exchange name and order ID)" do
+      @procedure.should_receive(:bind_param).with(9, "#{@order.account.exchange_model.service} #{@order.remote_id}", false)
       execute_query
     end
 

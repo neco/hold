@@ -5,6 +5,7 @@ require 'machinist/data_mapper'
 # Shams
 
 Sham.integer { (1_000_000 * rand).round }
+Sham.decimal { BigDecimal.new((1_000 * rand).round.to_s) }
 Sham.username { |index| "Username #{index}" }
 Sham.password { |index| "Password #{index}" }
 Sham.event { |index| "Event #{index}" }
@@ -40,6 +41,7 @@ Order.blueprint do
   section
   row
   quantity { Sham.integer }
+  unit_price { Sham.decimal }
 end
 
 Ticket.blueprint do

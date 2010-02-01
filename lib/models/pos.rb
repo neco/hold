@@ -1,4 +1,6 @@
 class POS
+  USER_ID = 58.freeze
+
   def find_tickets(event_name, occurs_at, section, row)
     execute('neco_adHocFindTickets', 5) do |procedure|
       procedure.bind_param(1, section, false)
@@ -12,14 +14,14 @@ class POS
     end
   end
 
-  def hold_tickets(first_ticket_id, last_ticket_id, occurs_at)
-    expires_date_time = occurs_at + (60 * 60 * 24 * 180)
-    sold_price = nil
-    client_broker_id = nil
+  def hold_tickets(order, first_ticket_id, last_ticket_id)
+    expires_date_time = order.occurs_at + (60 * 60 * 24 * 180)
+    sold_price = order.unit_price.to_f.to_s
+    client_broker_id = order.account.exchange_model.broker_id
     broker_csrid = nil
-    pos_user_id = nil
+    pos_user_id = USER_ID
     notes = nil
-    internal_notes = nil
+    internal_notes = "#{order.account.exchange_model.service} #{order.remote_id}"
     external_notes = nil
     shipping_notes = nil
 
