@@ -8,6 +8,7 @@
       %th Section
       %th Row
       %th Quantity
+      %th State
 
   %tbody
     - @orders.each do |order|
@@ -17,3 +18,4 @@
         %td= order.section
         %td= order.row
         %td= order.quantity
+        %td= order.state
