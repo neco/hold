@@ -26,12 +26,16 @@ namespace :deploy do
   end
 
   task :after_update_code do
-    gems.deploy
+    %w{config/db.sqlite3}.each do |file|
+      run "ln -nfs #{shared_path}/#{file} #{release_path}/#{file}"
+    end
+
+    gems.bundle
   end
 end
 
 namespace :gems do
   task :bundle, :roles => :app do
-    run "cd #{current_path} ; gem bundle --only production"
+    run "cd #{release_path} ; gem bundle --only production"
   end
 end

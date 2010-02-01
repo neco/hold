@@ -10,9 +10,9 @@ POS_DB = {
 }
 
 configure :development, :production do
-  DATABASE = "sqlite3://#{File.join(Dir.pwd, 'tmp', 'db.sqlite3')}".freeze
+  DATABASE = "sqlite3://#{File.join(Dir.pwd, 'config', 'db.sqlite3')}".freeze
 end
 
 configure :test do
-  DATABASE = "sqlite3://#{File.join(Dir.pwd, 'tmp', 'test.sqlite3')}".freeze
+  DATABASE = "sqlite3://#{File.join(Dir.pwd, 'config', 'test.sqlite3')}".freeze
 end
