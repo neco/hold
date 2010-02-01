@@ -10,6 +10,7 @@ gem 'do_sqlite3', '0.10.1'
 gem 'faker', '0.3.1'
 gem 'fakeweb', '1.2.8', :only => :testing
 gem 'haml', '2.2.13'
+gem 'hoptoad_notifier', '2.1.3'
 gem 'json', '1.1.9'
 gem 'machinist', '1.0.6', :only => :testing
 gem 'mechanize', '0.9.3'

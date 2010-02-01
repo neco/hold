@@ -39,32 +39,39 @@ end
 
 desc "Sync with the exchanges"
 task :sync => :environment do
-  Account.all.each do |account|
-    account.sync
-  end
-
-  Order.all(:state => 'created').each do |order|
-    order.sync
-
-    if order.state == 'failed'
-      mail('[HOLD] Ticket sync failed', <<-BODY)
-        Could not sync tickets for order #{order.id}.
-
-            Event Name: #{order.event_name}
-            Event: #{order.event}
-            Venue: #{order.venue}
-            Occurs At: #{order.occurs_at.to_s}
-            Section: #{order.section}
-            Row: #{order.row}
-            Quantity: #{order.quantity}
-
-        http://hold.neco.com/orders
-      BODY
+  begin
+    Account.all.each do |account|
+      account.sync
     end
-  end
 
-  Order.all(:state => 'synced').each do |order|
-    order.hold
+    Order.all(:state => 'created').each do |order|
+      order.sync
+
+      if order.state == 'failed'
+        mail('[HOLD] Ticket sync failed', <<-BODY)
+          Could not sync tickets for order #{order.id}.
+
+              Event Name: #{order.event_name}
+              Event: #{order.event}
+              Venue: #{order.venue}
+              Occurs At: #{order.occurs_at.to_s}
+              Section: #{order.section}
+              Row: #{order.row}
+              Quantity: #{order.quantity}
+
+          http://hold.neco.com/orders
+        BODY
+      end
+    end
+
+    Order.all(:state => 'synced').each do |order|
+      order.hold
+    end
+  rescue
+    HoptoadNotifier.notify(
+      :error_class => 'Sync Error',
+      :error_message => "Sync Error: #{$!.message}"
+    )
   end
 end
 
