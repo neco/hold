@@ -5,7 +5,7 @@ class Order
   property :account_id, Integer, :required => true
   property :remote_id, String, :length => 20, :required => true
   property :event, String, :length => 100, :required => true
-  property :venue, String, :length => 100, :required => true
+  property :venue, String, :length => 100
   property :occurs_at, DateTime, :required => true
   property :section, String, :length => 20, :required => true
   property :row, String, :length => 20, :required => true

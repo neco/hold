@@ -19,7 +19,12 @@ module Exchanges
         quantity = cells[5].to_i
 
         get(event_url)
-        venue = (dom / 'div.topBody a').first.inner_text.strip.split(/\n/).first
+
+        venue = if node = (dom / 'div.topBody a').first
+          node.inner_text.strip.split(/\n/).first
+        elsif node = (dom / 'span.venue').first
+          node['title']
+        end
 
         Order.new(
           cells[8],
