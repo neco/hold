@@ -6,8 +6,7 @@ gem 'dbi', '0.4.3'
 gem 'dm-aggregates', '0.10.2'
 gem 'dm-core', '0.10.2'
 gem 'dm-timestamps', '0.10.2'
-gem 'do_postgres', '0.10.1', :only => :production
-gem 'do_sqlite3', '0.10.1', :only => [:development, :testing]
+gem 'do_sqlite3', '0.10.1'
 gem 'faker', '0.3.1'
 gem 'fakeweb', '1.2.8', :only => :testing
 gem 'haml', '2.2.13'
