@@ -50,6 +50,7 @@ task :sync => :environment do
       mail('[HOLD] Ticket sync failed', <<-BODY)
         Could not sync tickets for order #{order.id}.
 
+            Event Name: #{order.event_name}
             Event: #{order.event}
             Venue: #{order.venue}
             Occurs At: #{order.occurs_at.to_s}
