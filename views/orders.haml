@@ -3,19 +3,23 @@
 %table
   %thead
     %tr
+      %th ID
       %th Event
       %th Venue
       %th Section
       %th Row
       %th Quantity
       %th State
+      %th Tickets
 
   %tbody
     - @orders.each do |order|
       %tr
+        %td= order.id
         %td= order.event
         %td= order.venue
         %td= order.section
         %td= order.row
         %td= order.quantity
         %td= order.state
+        %td= order.tickets.count
