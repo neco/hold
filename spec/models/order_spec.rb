@@ -35,6 +35,27 @@ describe Order do
       order = Order.new(:event => 'New York Knicks/Denver Nuggets')
       order.event_name.should == 'New York Knicks vs. Denver Nuggets'
     end
+
+    it "removes 'Tickets' from the end of the event name" do
+      order = Order.new(:event => 'Westminster Kennel Club Dog Show Tickets')
+      order.event_name.should == 'Westminster Kennel Club Dog Show'
+    end
+
+    it "removes anything following a hypen" do
+      order = Order.new(:event => 'Sony Ericsson Open Tickets - Session 13')
+      order.event_name.should == 'Sony Ericsson Open'
+
+      order = Order.new(:event => 'In the Heights Tickets - Broadway')
+      order.event_name.should == 'In the Heights'
+
+      order = Order.new(:event => 'Houston Rodeo Tickets - Lady Antebellum')
+      order.event_name.should == 'Houston Rodeo'
+    end
+
+    it "replaces 'at' with 'vs.' and swaps teams" do
+      order = Order.new(:event => 'Washington Wizards at New York Knicks Tickets')
+      order.event_name.should == 'New York Knicks vs. Washington Wizards'
+    end
   end
 
   context "#sync" do
