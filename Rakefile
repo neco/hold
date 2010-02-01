@@ -16,7 +16,7 @@ def mail(subject, body)
   require 'pony'
 
   Pony.mail(
-    :to => 'thunt@neco.com',
+    :to => 'holds@neco.com',
     :from => 'website@neco.com',
     :subject => subject,
     :body => body,
