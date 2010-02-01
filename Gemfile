@@ -13,6 +13,7 @@ gem 'haml', '2.2.13'
 gem 'json', '1.1.9'
 gem 'machinist', '1.0.6', :only => :testing
 gem 'mechanize', '0.9.3'
+gem 'pony', '0.6'
 gem 'racksh', '0.9.4.2', :only => :development
 gem 'rake', '0.8.7'
 gem 'rspec', '1.2.9'
