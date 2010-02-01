@@ -12,11 +12,20 @@ Spec::Rake::SpecTask.new(:rcov) do |spec|
   spec.rcov = true
 end
 
-desc "Sync with the exchanges"
-task :sync do
+task :environment do
   require 'hold'
+end
 
+desc "Sync with the exchanges"
+task :sync => :environment do
   Account.all.each do |account|
     account.sync
+  end
+end
+
+namespace :db do
+  desc "Automatically migrate the database"
+  task :migrate => :environment do
+    DataMapper.auto_upgrade!
   end
 end
