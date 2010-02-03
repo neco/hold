@@ -13,7 +13,7 @@
       %tr
         %td
           = order.id
-          .minor= order.state
+          .minor= order.state.gsub('_', ' ').titleize
         %td
           = order.event_name
           %span.minor= order.venue
