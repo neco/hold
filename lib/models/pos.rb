@@ -1,5 +1,6 @@
 class POS
   USER_ID = 58.freeze
+  BROKER_CSRID = 0.freeze
 
   def find_tickets(event_name, occurs_at, section, row)
     execute('neco_adHocFindTickets', 5) do |procedure|
@@ -18,7 +19,7 @@ class POS
     expires_date_time = (order.occurs_at + 180).strftime('%m-%d-%Y %H:%M')
     sold_price = order.unit_price.to_f.to_s
     client_broker_id = order.account.exchange_model.broker_id
-    broker_csrid = nil
+    broker_csrid = BROKER_CSRID
     pos_user_id = USER_ID
     notes = nil
     internal_notes = "#{order.account.exchange_model.service} - #{order.remote_id}"
