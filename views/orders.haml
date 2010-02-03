@@ -4,22 +4,25 @@
   %thead
     %tr
       %th ID
-      %th Event
-      %th Venue
-      %th Section
-      %th Row
+      %th Event &amp; Venue
+      %th Section &amp; Row
       %th Quantity
-      %th State
-      %th Tickets
 
   %tbody
     - @orders.each do |order|
       %tr
-        %td= order.id
-        %td= order.event_name
-        %td= order.venue
-        %td= order.section
-        %td= order.row
-        %td= order.quantity
-        %td= order.state
-        %td= order.tickets.count
+        %td
+          = order.id
+          .minor= order.state
+        %td
+          = order.event_name
+          %span.minor= order.venue
+          .minor= order.occurs_at.strftime('%B %d, %Y at %I:%M %p').gsub(/\s(0)/, ' ')
+        %td
+          = order.section
+          .minor= order.row
+        %td
+          = order.quantity
+          %span.minor
+            \/
+            = order.tickets.count
