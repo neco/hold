@@ -81,7 +81,7 @@ class Order
     end
 
     first, last = block[0..(quantity - 1)].values_at(-1, 0)
-    pos.hold_tickets(first.ticket_id, last.ticket_id)
+    pos.hold_tickets(self, first.ticket_id, last.ticket_id)
     place_on_hold
   end
 

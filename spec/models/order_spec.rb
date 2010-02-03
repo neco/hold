@@ -135,7 +135,7 @@ describe Order do
         Ticket.make(:ticket_id => 1012, :seat => '12')
       ])
 
-      @pos.should_receive(:hold_tickets).with(1011, 1012)
+      @pos.should_receive(:hold_tickets).with(@order, 1011, 1012)
 
       @order.hold
     end
@@ -152,7 +152,7 @@ describe Order do
         Ticket.make(:ticket_id => 1017, :seat => '17'),
       ])
 
-      @pos.should_receive(:hold_tickets).with(1016, 1017)
+      @pos.should_receive(:hold_tickets).with(@order, 1016, 1017)
 
       @order.hold
     end
