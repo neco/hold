@@ -2,21 +2,25 @@ require 'spec_helper'
 
 describe POS do
   shared_examples_for "a query method" do
+    before(:each) do
+      @connection_error = DBI::DatabaseError.new('S1000 (0) [unixODBC][FreeTDS][SQL Server]Unable to connect to data source')
+    end
+
     it "tries to open an SSH tunnel and retry if there's a database error" do
-      DBI.should_receive(:connect).once.and_raise(DBI::DatabaseError)
+      DBI.should_receive(:connect).once.and_raise(@connection_error)
       DBI.should_receive(:connect).once.and_return(@connection)
       @pos.should_receive(:system).once.with(/ssh -f -N -L 1433:localhost:1433 \w+@[\.a-z]+ -p \d+/)
       execute_query
     end
 
     it "raises the error if the tunnel is already open and there's an error" do
-      DBI.stub(:connect).and_raise(DBI::DatabaseError)
+      DBI.stub(:connect).and_raise(@connection_error)
       @pos.should_receive(:system).once.with(/ssh -f -N -L 1433:localhost:1433 \w+@[\.a-z]+ -p \d+/)
       lambda { execute_query }.should raise_error(DBI::DatabaseError)
     end
 
     it "raises an error if an SSH tunnel cannot be opened" do
-      DBI.should_receive(:connect).once.and_raise(DBI::DatabaseError)
+      DBI.should_receive(:connect).once.and_raise(@connection_error)
       @pos.should_receive(:system).and_raise('error')
       lambda { execute_query }.should raise_error(RuntimeError)
     end
@@ -146,8 +150,7 @@ describe POS do
     end
 
     it "sets the third parameter of the prepared query to the expiration (180 days from the date of the event)" do
-      six_months_from_now = @now + (60 * 60 * 24 * 180)
-      @procedure.should_receive(:bind_param).with(3, six_months_from_now, false)
+      @procedure.should_receive(:bind_param).with(3, (@now + 180).strftime('%m-%d-%Y %H:%M'), false)
       execute_query
     end
 
@@ -177,7 +180,7 @@ describe POS do
     end
 
     it "sets the ninth parameter of the prepared query to the internal notes (exchange name and order ID)" do
-      @procedure.should_receive(:bind_param).with(9, "#{@order.account.exchange_model.service} #{@order.remote_id}", false)
+      @procedure.should_receive(:bind_param).with(9, "#{@order.account.exchange_model.service} - #{@order.remote_id}", false)
       execute_query
     end
 

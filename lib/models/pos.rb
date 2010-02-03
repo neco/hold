@@ -15,13 +15,13 @@ class POS
   end
 
   def hold_tickets(order, first_ticket_id, last_ticket_id)
-    expires_date_time = order.occurs_at + (60 * 60 * 24 * 180)
+    expires_date_time = (order.occurs_at + 180).strftime('%m-%d-%Y %H:%M')
     sold_price = order.unit_price.to_f.to_s
     client_broker_id = order.account.exchange_model.broker_id
     broker_csrid = nil
     pos_user_id = USER_ID
     notes = nil
-    internal_notes = "#{order.account.exchange_model.service} #{order.remote_id}"
+    internal_notes = "#{order.account.exchange_model.service} - #{order.remote_id}"
     external_notes = nil
     shipping_notes = nil
 
@@ -58,7 +58,7 @@ class POS
   def connect_to_pos(&block)
     yield DBI.connect(*POS_DB.values_at(:dsn, :database, :password))
   rescue DBI::DatabaseError
-    unless @opened_tunnel
+    if !@opened_tunnel && $!.message =~ /unable to connect/i
       begin
         system "ssh -f -N -L 1433:localhost:1433 #{POS_DB[:user]}@#{POS_DB[:host]} -p #{POS_DB[:port]}"
         @opened_tunnel = true
