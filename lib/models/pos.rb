@@ -21,8 +21,8 @@ class POS
     client_broker_id = order.account.exchange_model.broker_id
     broker_csrid = BROKER_CSRID
     pos_user_id = USER_ID
-    notes = nil
-    internal_notes = "#{order.account.exchange_model.service} - #{order.remote_id}"
+    notes = "#{order.account.exchange_model.service} - #{order.remote_id}"
+    internal_notes = nil
     external_notes = nil
     shipping_notes = nil
 

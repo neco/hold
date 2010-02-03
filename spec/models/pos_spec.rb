@@ -174,13 +174,13 @@ describe POS do
       execute_query
     end
 
-    it "sets the eighth parameter of the prepared query to the notes" do
-      @procedure.should_receive(:bind_param).with(8, nil, false)
+    it "sets the eighth parameter of the prepared query to the notes (exchange name and order ID)" do
+      @procedure.should_receive(:bind_param).with(8, "#{@order.account.exchange_model.service} - #{@order.remote_id}", false)
       execute_query
     end
 
-    it "sets the ninth parameter of the prepared query to the internal notes (exchange name and order ID)" do
-      @procedure.should_receive(:bind_param).with(9, "#{@order.account.exchange_model.service} - #{@order.remote_id}", false)
+    it "sets the ninth parameter of the prepared query to the internal notes" do
+      @procedure.should_receive(:bind_param).with(9, nil, false)
       execute_query
     end
 
