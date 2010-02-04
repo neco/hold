@@ -22,7 +22,7 @@ class POS
     broker_csrid = BROKER_CSRID
     pos_user_id = USER_ID
     notes = "#{order.account.exchange_model.service} - #{order.remote_id}"
-    internal_notes = nil
+    internal_notes = ''
     external_notes = nil
     shipping_notes = nil
 

@@ -180,7 +180,7 @@ describe POS do
     end
 
     it "sets the ninth parameter of the prepared query to the internal notes" do
-      @procedure.should_receive(:bind_param).with(9, nil, false)
+      @procedure.should_receive(:bind_param).with(9, '', false)
       execute_query
     end
 
