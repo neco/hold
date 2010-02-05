@@ -1,4 +1,7 @@
 class Order
+  Error = Class.new(StandardError)
+  InsufficientQuantity = Class.new(Error)
+
   include DataMapper::Resource
 
   property :id, Serial
@@ -24,10 +27,12 @@ class Order
     state :synced
     state :failed
     state :on_hold
+    state :not_held
 
     event(:mark_as_synced) { transition :created => :synced }
     event(:mark_as_failed) { transition :created => :failed }
     event(:place_on_hold) { transition :synced => :on_hold }
+    event(:could_not_hold) { transition :synced => :not_held }
   end
 
   def event_name
@@ -80,9 +85,14 @@ class Order
       sized_up[quantity + 1]
     end
 
-    first, last = block[0..(quantity - 1)].values_at(-1, 0)
-    pos.hold_tickets(self, first.ticket_id, last.ticket_id)
-    place_on_hold
+    if block && block.length >= quantity
+      first, last = block[0..(quantity - 1)].values_at(-1, 0)
+      pos.hold_tickets(self, first.ticket_id, last.ticket_id)
+      place_on_hold
+    else
+      could_not_hold
+      raise InsufficientQuantity
+    end
   end
 
   def ticket_blocks

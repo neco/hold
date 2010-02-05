@@ -91,35 +91,44 @@ describe Order do
       @order.sync
     end
 
-    it "creates a new ticket for each ticket result returned" do
-      @tickets.each do |ticket|
-        @order.tickets.should_receive(:create).with(
-          :ticket_id => ticket[0],
-          :group_id => ticket[1],
-          :section => ticket[2],
-          :row => ticket[3],
-          :seat => ticket[4],
-          :event => ticket[5],
-          :venue => ticket[7],
-          :city => ticket[8],
-          :occurs_at => ticket[6]
-        )
+    context "with tickets found" do
+      it "creates a new ticket for each ticket found in the POS" do
+        @tickets.each do |ticket|
+          @order.tickets.should_receive(:create).with(
+            :ticket_id => ticket[0],
+            :group_id => ticket[1],
+            :section => ticket[2],
+            :row => ticket[3],
+            :seat => ticket[4],
+            :event => ticket[5],
+            :venue => ticket[7],
+            :city => ticket[8],
+            :occurs_at => ticket[6]
+          )
+        end
+
+        @order.sync
       end
 
-      @order.sync
+      it "marks the order state as synced" do
+        @order.state.should == 'created'
+        @order.sync
+        @order.state.should == 'synced'
+      end
     end
 
-    it "marks the order state as synced if any ticket results are returned" do
-      @order.state.should == 'created'
-      @order.sync
-      @order.state.should == 'synced'
-    end
+    context "with no tickets found" do
+      it "marks the order state as failed" do
+        @order.state.should == 'created'
+        @pos.should_receive(:find_tickets).and_return([])
+        @order.sync rescue POS::TicketsNotFound
+        @order.state.should == 'failed'
+      end
 
-    it "marks the order state as failed if no ticket results are returned" do
-      @order.state.should == 'created'
-      @pos.should_receive(:find_tickets).and_return([])
-      @order.sync
-      @order.state.should == 'failed'
+      it "raises a TicketsNotFound error" do
+        @pos.should_receive(:find_tickets).and_raise(POS::TicketsNotFound)
+        lambda { @order.sync }.should raise_error(POS::TicketsNotFound)
+      end
     end
   end
 
@@ -128,46 +137,68 @@ describe Order do
       @order = Order.make(:quantity => 2, :state => 'synced')
     end
 
-    it "use the highest seat numbers in the block first" do
-      @order.stub(:tickets).and_return([
-        Ticket.make(:ticket_id => 1010, :seat => '10'),
-        Ticket.make(:ticket_id => 1011, :seat => '11'),
-        Ticket.make(:ticket_id => 1012, :seat => '12')
-      ])
+    context "with sufficient quantity" do
+      it "use the highest seat numbers in the block first" do
+        @order.stub(:tickets).and_return([
+          Ticket.make(:ticket_id => 1010, :seat => '10'),
+          Ticket.make(:ticket_id => 1011, :seat => '11'),
+          Ticket.make(:ticket_id => 1012, :seat => '12')
+        ])
 
-      @pos.should_receive(:hold_tickets).with(@order, 1011, 1012)
+        @pos.should_receive(:hold_tickets).with(@order, 1011, 1012)
 
-      @order.hold
+        @order.hold
+      end
+
+      it "take the smallest block that won't leave a single ticket" do
+        @order.stub(:tickets).and_return([
+          Ticket.make(:ticket_id => 1010, :seat => '10'),
+          Ticket.make(:ticket_id => 1011, :seat => '11'),
+          Ticket.make(:ticket_id => 1012, :seat => '12'),
+          # gap
+          Ticket.make(:ticket_id => 1014, :seat => '14'),
+          Ticket.make(:ticket_id => 1015, :seat => '15'),
+          Ticket.make(:ticket_id => 1016, :seat => '16'),
+          Ticket.make(:ticket_id => 1017, :seat => '17'),
+        ])
+
+        @pos.should_receive(:hold_tickets).with(@order, 1016, 1017)
+
+        @order.hold
+      end
+
+      it "marks the order state as on hold" do
+        @order.stub(:tickets).and_return([
+          Ticket.make(:ticket_id => 1010, :seat => '10'),
+          Ticket.make(:ticket_id => 1011, :seat => '11')
+        ])
+
+        @pos.stub(:hold_tickets)
+
+        @order.state.should == 'synced'
+        @order.hold
+        @order.state.should == 'on_hold'
+      end
     end
 
-    it "take the smallest block in the row that won't leave a single ticket" do
-      @order.stub(:tickets).and_return([
-        Ticket.make(:ticket_id => 1010, :seat => '10'),
-        Ticket.make(:ticket_id => 1011, :seat => '11'),
-        Ticket.make(:ticket_id => 1012, :seat => '12'),
-        # gap
-        Ticket.make(:ticket_id => 1014, :seat => '14'),
-        Ticket.make(:ticket_id => 1015, :seat => '15'),
-        Ticket.make(:ticket_id => 1016, :seat => '16'),
-        Ticket.make(:ticket_id => 1017, :seat => '17'),
-      ])
+    context "with insufficient quantity" do
+      before(:each) do
+        @order.stub(:tickets).and_return([
+          Ticket.make(:ticket_id => 1010, :seat => '10')
+        ])
 
-      @pos.should_receive(:hold_tickets).with(@order, 1016, 1017)
+        @pos.stub(:hold_tickets)
+      end
 
-      @order.hold
-    end
+      it "raises InsufficientQuantity error without a big enough block" do
+        lambda { @order.hold }.should raise_error(Order::InsufficientQuantity)
+      end
 
-    it "marks the order state as on hold" do
-      @order.stub(:tickets).and_return([
-        Ticket.make(:ticket_id => 1010, :seat => '10'),
-        Ticket.make(:ticket_id => 1011, :seat => '11')
-      ])
-
-      @pos.stub(:hold_tickets)
-
-      @order.state.should == 'synced'
-      @order.hold
-      @order.state.should == 'on_hold'
+      it "marks the order state as not held" do
+        @order.state.should == 'synced'
+        @order.hold rescue Order::InsufficientQuantity
+        @order.state.should == 'not_held'
+      end
     end
   end
 end

@@ -45,10 +45,10 @@ task :sync => :environment do
     end
 
     Order.all(:state => 'created').each do |order|
-      order.sync
-
-      if order.state == 'failed'
-        mail('[HOLD] Ticket sync failed', <<-BODY)
+      begin
+        order.sync
+      rescue POS::TicketsNotFound
+        mail('[Hold] Ticket sync failed', <<-BODY)
           Could not sync tickets for order #{order.id}.
 
               Event Name: #{order.event_name}
@@ -65,7 +65,24 @@ task :sync => :environment do
     end
 
     Order.all(:state => 'synced').each do |order|
-      order.hold
+      begin
+        order.hold
+      rescue Order::InsufficientQuantity
+        mail('[Hold] Could not place hold', <<-BODY)
+          Could not hold tickets for order #{order.id}.
+          A block of #{order.quantity} seats was not found.
+
+              Event Name: #{order.event_name}
+              Event: #{order.event}
+              Venue: #{order.venue}
+              Occurs At: #{order.occurs_at.to_s}
+              Section: #{order.section}
+              Row: #{order.row}
+              Quantity: #{order.quantity}
+
+          http://hold.neco.com/orders
+        BODY
+      end
     end
   rescue
     HoptoadNotifier.notify(

@@ -108,6 +108,14 @@ describe POS do
       @procedure.should_receive(:execute)
       execute_query
     end
+
+    it "raises a TicketsNotFound error if no tickets are found" do
+      @procedure.should_receive(:fetch_all).and_return([])
+
+      lambda {
+        execute_query
+      }.should raise_error(POS::TicketsNotFound)
+    end
   end
 
   context "#hold_tickets" do

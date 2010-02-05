@@ -2,6 +2,9 @@ class POS
   USER_ID = 58.freeze
   BROKER_CSRID = 0.freeze
 
+  Error = Class.new(StandardError)
+  TicketsNotFound = Class.new(Error)
+
   def find_tickets(event_name, occurs_at, section, row)
     execute('neco_adHocFindTickets', 5) do |procedure|
       procedure.bind_param(1, section, false)
@@ -11,7 +14,10 @@ class POS
       procedure.bind_param(5, '%', false)
 
       procedure.execute
-      procedure.fetch_all
+
+      procedure.fetch_all.tap do |results|
+        raise TicketsNotFound if results.empty?
+      end
     end
   end
 
