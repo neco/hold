@@ -120,7 +120,7 @@ describe Order do
     context "with no tickets found" do
       it "marks the order state as failed" do
         @order.state.should == 'created'
-        @pos.should_receive(:find_tickets).and_return([])
+        @pos.should_receive(:find_tickets).and_raise(POS::TicketsNotFound)
         @order.sync rescue POS::TicketsNotFound
         @order.state.should == 'failed'
       end

@@ -46,10 +46,8 @@ class Order
   end
 
   def sync
-    data = pos.find_tickets(event_name, occurs_at, section, row)
-
-    if data.any?
-      data.each do |ticket|
+    begin
+      pos.find_tickets(event_name, occurs_at, section, row).each do |ticket|
         tickets.create(
           :ticket_id => ticket[0],
           :group_id => ticket[1],
@@ -64,8 +62,9 @@ class Order
       end
 
       mark_as_synced
-    else
+    rescue POS::TicketsNotFound
       mark_as_failed
+      raise
     end
   end
 
