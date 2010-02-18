@@ -85,10 +85,7 @@ task :sync => :environment do
       end
     end
   rescue
-    HoptoadNotifier.notify(
-      :error_class => 'Sync Error',
-      :error_message => "Sync Error: #{$!.message}"
-    )
+    HoptoadNotifier.notify($!)
   end
 end
 
