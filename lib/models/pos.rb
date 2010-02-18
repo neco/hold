@@ -1,6 +1,6 @@
 class POS
   USER_ID = 58.freeze
-  BROKER_CSRID = 0.freeze
+  BROKER_CSRID = 58.freeze
 
   Error = Class.new(StandardError)
   TicketsNotFound = Class.new(Error)
