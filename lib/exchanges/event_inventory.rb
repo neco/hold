@@ -16,7 +16,7 @@ module Exchanges
         order_id = cells[0]
 
         fetch_order(order_id)
-        ticket_price = BigDecimal.new((dom / '#ctl00_ContentPlaceHolder_EIWeb_lblActualPrice').first.inner_text.gsub(/[^\d\.]/, ''))
+        ticket_price = BigDecimal.new((dom / '#ctl00_ContentPlaceHolder_EIWeb_lblActualPrice2').first.inner_text.gsub(/[^\d\.]/, ''))
 
         Order.new(
           order_id,
