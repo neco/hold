@@ -36,12 +36,17 @@ class Order
   end
 
   def event_name
-    name = event.dup
+    name = event.dup.strip
     name.sub!('/', ' vs. ')
     name.sub!(/\s+-\s+[\w\s]+\Z/, '')
     name.sub!(/\s+\([\w\s]+\)\Z/, '')
     name.sub!(/\s+Tickets\Z/, '')
-    name = name.split(/\s+at\s+/).reverse.join(' vs. ') if name =~ /\sat\s/
+    name.sub!(/\AWWE\s+.*/, 'WWE')
+    name.sub!(/\AUltimate Fighting Championship\Z/, 'UFC')
+    name.sub!(/\AUFC\s+\d+.*/, 'UFC')
+    name.sub!(/\A(Big East)\s+.*(Session\s+\d+).*/, '\1%\2')
+    name.sub!(/\A(Rodeo)\s+(Houston).*/, '\2 \1')
+    name.sub!(/\A(.*?)\s+at\s+(.*?)\Z/, '\2 vs. \1')
     name
   end
 

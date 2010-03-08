@@ -61,6 +61,31 @@ describe Order do
       order = Order.new(:event => 'Washington Wizards at New York Knicks Tickets')
       order.event_name.should == 'New York Knicks vs. Washington Wizards'
     end
+
+    it "uses 'WWE' for events starting with 'WWE'" do
+      order = Order.new(:event => 'WWE SmackDown ECW Tickets')
+      order.event_name.should == 'WWE'
+    end
+
+    it "uses 'UFC' for 'Ultimate Fighting Championship'" do
+      order = Order.new(:event => 'Ultimate Fighting Championship')
+      order.event_name.should == 'UFC'
+    end
+
+    it "uses 'UFC' for specific UCF fights" do
+      order = Order.new(:event => 'UFC 111 Tickets (Georges St-Pierre vs. Dan Hardy)')
+      order.event_name.should == 'UFC'
+    end
+
+    it "appends the session number with a wildcard for 'Big East' events" do
+      order = Order.new(:event => 'Big East Basketball Tournament Tickets - Session 3 (Georgetown vs. TBD, Marquette vs. TBD)')
+      order.event_name.should == 'Big East%Session 3'
+    end
+
+    it "uses 'Houston Rodeo' for 'Rodeo Houston'" do
+      order = Order.new(:event => 'Rodeo Houston')
+      order.event_name.should == 'Houston Rodeo'
+    end
   end
 
   context "#sync" do
