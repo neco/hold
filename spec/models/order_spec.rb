@@ -41,7 +41,7 @@ describe Order do
       order.event_name.should == 'Westminster Kennel Club Dog Show'
     end
 
-    it "removes anything following a hypen" do
+    it "removes anything following 'Tickets' and a hypen" do
       order = Order.new(:event => 'Sony Ericsson Open Tickets - Session 13')
       order.event_name.should == 'Sony Ericsson Open'
 
@@ -50,6 +50,11 @@ describe Order do
 
       order = Order.new(:event => 'Houston Rodeo Tickets - Lady Antebellum')
       order.event_name.should == 'Houston Rodeo'
+    end
+
+    it "keeps everything following a hyphen before 'Tickets'" do
+      order = Order.new(:event => 'The E.N.D. World Tour - Black Eyed Peas Tickets')
+      order.event_name.should == 'Black Eyed Peas'
     end
 
     it "removes anything following in parenthesis" do

@@ -38,7 +38,8 @@ class Order
   def event_name
     name = event.dup.strip
     name.sub!('/', ' vs. ')
-    name.sub!(/\s+-\s+[\w\s]+\Z/, '')
+    name.sub!(/\s+Tickets\s+-\s+[\w\s]+\Z/, '')
+    name.sub!(/\A.*?\s+-\s+(.*?)\s+Tickets\Z/, '\1')
     name.sub!(/\s+\([\w\s]+\)\Z/, '')
     name.sub!(/\s+Tickets\Z/, '')
     name.sub!(/\AWWE\s+.*/, 'WWE')
