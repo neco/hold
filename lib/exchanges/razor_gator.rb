@@ -19,11 +19,13 @@ module Exchanges
       items = json['d']['Items'] || []
 
       items.collect do |item|
+        name, occurs_at = item['EventNameDateTime'].split("\n\r")
+
         Order.new(
           item['Order_ID'].to_s,
-          item['EventNameDateTime'].split("\n").first,
+          name,
           item['Venue_Name'],
-          Time.at(item['Event_date_time'].scan(/\d+/).first.to_i / 1000).utc,
+          Time.parse(occurs_at).utc,
           item['Seating_Section'],
           item['Seating_Row'],
           item['Quantity'],
