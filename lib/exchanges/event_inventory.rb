@@ -3,6 +3,7 @@ module Exchanges
     HOST = 'https://www.eventinventory.com'.freeze
 
     self.broker_id = 1276
+    self.employee_id = 1276
     self.service = 'Event Inventory'
 
     def orders

@@ -15,7 +15,7 @@ module Exchanges
   )
 
   class Base
-    class_inheritable_accessor :broker_id, :service
+    class_inheritable_accessor :broker_id, :employee_id, :service
 
     attr_reader :page
 

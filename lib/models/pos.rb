@@ -1,6 +1,5 @@
 class POS
   USER_ID = 58.freeze
-  BROKER_CSRID = 58.freeze
 
   Error = Class.new(StandardError)
   TicketsNotFound = Class.new(Error)
@@ -25,7 +24,7 @@ class POS
     expires_date_time = (order.occurs_at + 180).strftime('%m-%d-%Y %H:%M')
     sold_price = order.unit_price.to_f.to_s
     client_broker_id = order.account.exchange_model.broker_id
-    broker_csrid = BROKER_CSRID
+    broker_csrid = order.account.exchange_model.employee_id
     pos_user_id = USER_ID
     notes = "#{order.account.exchange_model.service} - #{order.remote_id}"
     internal_notes = ''

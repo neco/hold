@@ -3,6 +3,7 @@ module Exchanges
     HOST = 'https://myaccount.stubhub.com'.freeze
 
     self.broker_id = 1819
+    self.employee_id = 1819
     self.service = 'StubHub'
 
     def orders

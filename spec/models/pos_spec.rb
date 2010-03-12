@@ -173,7 +173,7 @@ describe POS do
     end
 
     it "sets the sixth parameter of the prepared query to the broker CSRID" do
-      @procedure.should_receive(:bind_param).with(6, POS::BROKER_CSRID, false)
+      @procedure.should_receive(:bind_param).with(6, @order.account.exchange_model.employee_id, false)
       execute_query
     end
 
