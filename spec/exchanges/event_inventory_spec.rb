@@ -10,7 +10,7 @@ describe Exchanges::EventInventory do
     )
     FakeWeb.register_uri(
       :post,
-      'https://www.eventinventory.com/login/login.aspx',
+      'https://www.eventinventory.com/login/login.aspx?client=1',
       :status => [302, 'Found'],
       :location => 'https://www.eventinventory.com/Basic/ChangeClient.aspx?autoForward=1'
     )

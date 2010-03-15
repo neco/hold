@@ -51,7 +51,7 @@ module Exchanges
       unless @logged_in
         get("#{HOST}/login/login.aspx")
 
-        page.form_with(:action => 'login.aspx') do |form|
+        page.form_with(:name => 'aspnetForm') do |form|
           form['ctl00$ContentPlaceHolder_EIWeb$txtUsername'] = @username
           form['ctl00$ContentPlaceHolder_EIWeb$txtPassword'] = @password
         end.click_button
