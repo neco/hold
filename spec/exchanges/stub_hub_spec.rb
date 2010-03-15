@@ -56,6 +56,12 @@ describe Exchanges::StubHub do
     end
   end
 
+  context ".employee_id" do
+    it "provides access to the client broker employee ID" do
+      Exchanges::StubHub.broker_id.should == 1819
+    end
+  end
+
   context ".service" do
     it "provides access to the service name" do
       Exchanges::StubHub.service.should == 'StubHub'

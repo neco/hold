@@ -38,6 +38,12 @@ describe Exchanges::RazorGator do
     end
   end
 
+  context ".employee_id" do
+    it "provides access to the client broker employee ID" do
+      Exchanges::RazorGator.broker_id.should == 1653
+    end
+  end
+
   context ".service" do
     it "provides access to the service name" do
       Exchanges::RazorGator.service.should == 'RazorGator'

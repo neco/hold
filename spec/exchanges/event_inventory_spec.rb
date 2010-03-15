@@ -62,6 +62,12 @@ describe Exchanges::EventInventory do
     end
   end
 
+  context ".employee_id" do
+    it "provides access to the client broker employee ID" do
+      Exchanges::EventInventory.broker_id.should == 1276
+    end
+  end
+
   context ".service" do
     it "provides access to the service name" do
       Exchanges::EventInventory.service.should == 'Event Inventory'
