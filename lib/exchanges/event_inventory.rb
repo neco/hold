@@ -34,7 +34,7 @@ module Exchanges
 
     def fetch_orders
       login
-      get "#{HOST}/Basic/SystemOrders/Orders.aspx"
+      get("#{HOST}/Basic/SystemOrders/Orders.aspx")
     end
     protected :fetch_orders
 
@@ -49,11 +49,11 @@ module Exchanges
 
     def login
       unless @logged_in
-        get("#{HOST}/login/index.cfm")
+        get("#{HOST}/login/login.aspx")
 
-        page.form_with(:action => '/login/login.cfm') do |form|
-          form['Username'] = @username
-          form['Password'] = @password
+        page.form_with(:action => 'login.aspx') do |form|
+          form['ctl00$ContentPlaceHolder_EIWeb$txtUsername'] = @username
+          form['ctl00$ContentPlaceHolder_EIWeb$txtPassword'] = @password
         end.click_button
 
         @logged_in = true
