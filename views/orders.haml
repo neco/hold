@@ -17,7 +17,9 @@
         %td
           = order.event_name
           %span.minor= order.venue
-          .minor= order.occurs_at.strftime('%B %d, %Y at %I:%M %p').gsub(/\s(0)/, ' ')
+          .minor
+            = order.occurs_at.strftime('%B %d, %Y at %I:%M %p').gsub(/\s(0)/, ' ')
+            = "(#{order.account.exchange} / #{order.account.username})"
         %td
           = order.section
           .minor= order.row
