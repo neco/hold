@@ -1,4 +1,5 @@
 require 'bigdecimal'
+require 'extlib'
 require 'json'
 require 'mechanize'
 
