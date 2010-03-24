@@ -20,22 +20,18 @@ module Exchanges
       items = json['d']['Items'] || []
 
       items.collect do |item|
-        begin
-          name, occurs_at = item['EventNameDateTime'].split("\n\r")
+        name, occurs_at = item['EventNameDateTime'].split(/\n\r|\r\n/)
 
-          Order.new(
-            item['Order_ID'].to_s,
-            name,
-            item['Venue_Name'],
-            Time.parse(occurs_at).utc,
-            item['Seating_Section'],
-            item['Seating_Row'],
-            item['Quantity'],
-            BigDecimal.new(item['WholeSaleCost'].to_s)
-          )
-        rescue TypeError
-          HoptoadNotifier.notify($!.class.new("#{$!.message}\n\n#{item.inspect}"))
-        end
+        Order.new(
+          item['Order_ID'].to_s,
+          name,
+          item['Venue_Name'],
+          Time.parse(occurs_at).utc,
+          item['Seating_Section'],
+          item['Seating_Row'],
+          item['Quantity'],
+          BigDecimal.new(item['WholeSaleCost'].to_s)
+        )
       end
     end
 
