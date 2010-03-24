@@ -20,24 +20,28 @@ module Exchanges
       items = json['d']['Items'] || []
 
       items.collect do |item|
-        name, occurs_at = item['EventNameDateTime'].split("\n\r")
+        begin
+          name, occurs_at = item['EventNameDateTime'].split("\n\r")
 
-        Order.new(
-          item['Order_ID'].to_s,
-          name,
-          item['Venue_Name'],
-          Time.parse(occurs_at).utc,
-          item['Seating_Section'],
-          item['Seating_Row'],
-          item['Quantity'],
-          BigDecimal.new(item['WholeSaleCost'].to_s)
-        )
+          Order.new(
+            item['Order_ID'].to_s,
+            name,
+            item['Venue_Name'],
+            Time.parse(occurs_at).utc,
+            item['Seating_Section'],
+            item['Seating_Row'],
+            item['Quantity'],
+            BigDecimal.new(item['WholeSaleCost'].to_s)
+          )
+        rescue TypeError
+          HoptoadNotifier.notify($!.class.new("#{$!.message}\n\n#{item.inspect}"))
+        end
       end
     end
 
     def login(path=nil)
       unless @logged_in
-        get("#{HOST}/login.aspx#{path ? "?ReturnUrl=#{path}" : nil }")
+        get("#{HOST}/login.aspx#{path ? "?ReturnUrl=#{path}" : nil}")
 
         @page = page.form_with(:name => 'Form2') do |form|
           form['SSSLogin$UserName'] = @username
