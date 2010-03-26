@@ -49,11 +49,16 @@ module Exchanges
 
     def login
       unless @logged_in
+        get("#{HOST}/login/setup_cookies.cfm")
         get("#{HOST}/login/login.aspx")
 
         page.form_with(:name => 'aspnetForm') do |form|
           form['ctl00$ContentPlaceHolder_EIWeb$txtUsername'] = @username
           form['ctl00$ContentPlaceHolder_EIWeb$txtPassword'] = @password
+
+          agent.cookies.each do |cookie|
+            form["txt#{cookie.name}"] = cookie.value if cookie.name =~ /\ACF/
+          end
         end.click_button
 
         @logged_in = true

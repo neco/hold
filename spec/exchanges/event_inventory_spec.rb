@@ -4,15 +4,24 @@ describe Exchanges::EventInventory do
   before(:all) do
     FakeWeb.register_uri(
       :get,
+      'https://www.eventinventory.com/login/setup_cookies.cfm',
+      :body => fakeweb_template('event_inventory/cookies.html'),
+      :content_type => 'text/html',
+      :set_cookie => 'CFID=159674759; expires=Sun, 27-Sep-2037 00:00:00 GMT; path=/;, CFTOKEN=2ca3ce5%2D4f59f2f3%2D76db%2D4e02%2Da39b%2D25f50dc4240c; expires=Sun, 27-Sep-2037 00:00:00 GMT; path=/;'
+    )
+    FakeWeb.register_uri(
+      :get,
       'https://www.eventinventory.com/login/login.aspx',
       :body => fakeweb_template('event_inventory/login.html'),
-      :content_type => 'text/html'
+      :content_type => 'text/html',
+      :set_cookie => 'EISKEY=8AAA6324606E410DB31D9B14A333E1DD; path=/'
     )
     FakeWeb.register_uri(
       :post,
       'https://www.eventinventory.com/login/login.aspx?client=1',
       :status => [302, 'Found'],
-      :location => 'https://www.eventinventory.com/Basic/ChangeClient.aspx?autoForward=1'
+      :location => 'https://www.eventinventory.com/Basic/ChangeClient.aspx?autoForward=1',
+      :set_cookie => 'CFID=159674759; path=/, CFTOKEN=2ca3ce5%2D4f59f2f3%2D76db%2D4e02%2Da39b%2D25f50dc4240c; path=/, EISKEY=781C15B7D4984FCE80E0CF390765C6BA; path=/'
     )
     FakeWeb.register_uri(
       :get,
