@@ -51,9 +51,14 @@ class Order
     name
   end
 
+  def section_number
+    number = section.sub(/[^\d]*/, '')
+    number.empty? ? section : number
+  end
+
   def sync
     begin
-      pos.find_tickets(event_name, occurs_at, section, row).each do |ticket|
+      pos.find_tickets(event_name, occurs_at, section_number, row).each do |ticket|
         tickets.create(
           :ticket_id => ticket[0],
           :group_id => ticket[1],

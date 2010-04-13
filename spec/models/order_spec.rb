@@ -93,6 +93,18 @@ describe Order do
     end
   end
 
+  context "#section_number" do
+    it "strips out non-numeric characters" do
+      order = Order.new(:section => 'Terrace Level 328')
+      order.section_number.should == '328'
+    end
+
+    it "passes through the section if there's no numeric portion" do
+      order = Order.new(:section => 'ORCH')
+      order.section_number.should == 'ORCH'
+    end
+  end
+
   context "#sync" do
     before(:each) do
       ticket = [
@@ -117,7 +129,7 @@ describe Order do
     end
 
     it "finds tickets for the order's event, seat, and row" do
-      @pos.should_receive(:find_tickets).with(@order.event_name, @order.occurs_at, @order.section, @order.row).and_return(@tickets)
+      @pos.should_receive(:find_tickets).with(@order.event_name, @order.occurs_at, @order.section_number, @order.row).and_return(@tickets)
       @order.sync
     end
 
