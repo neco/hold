@@ -15,7 +15,7 @@ describe "The orders page" do
     response_body.should have_selector('table tbody tr:first') do |row|
       row.should contain(@order.event)
       row.should contain(@order.venue)
-      row.should contain(@order.section)
+      row.should contain(@order.section_number)
       row.should contain(@order.row)
       row.should contain(@order.quantity.to_s)
     end

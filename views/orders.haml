@@ -21,7 +21,7 @@
             = order.occurs_at.strftime('%B %d, %Y at %I:%M %p').gsub(/\s(0)/, ' ')
             = "(#{order.account.exchange} / #{order.account.username})"
         %td
-          = order.section
+          = order.section_number
           .minor= order.row
         %td
           = order.quantity
