@@ -80,6 +80,28 @@ body
         :display block
         :font-size 0.875em
 
+    .pagination
+      :position relative
+
+      .previous,
+      .next
+        +rounded(0.25em)
+        :position absolute
+        :background #EEE
+        :border 1px solid #DDD
+        :text-decoration none
+        :font-weight bold
+        :padding 0 0.25em
+        :line-height = !line_height
+        :top = !line_height * 2
+        :margin = 0 !line_height
+
+      .previous
+        :right 100%
+
+      .next
+        :left 100%
+
     table
       :margin = !line_height 0
       :width 100%

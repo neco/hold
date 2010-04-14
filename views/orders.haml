@@ -1,5 +1,12 @@
 %h2 Orders
 
+.pagination
+  - if @page > 1
+    %a{ :class => 'previous', :href => "/orders/#{@page - 1}" } Newer
+
+  - if @page * 10 < @orders_count
+    %a{ :class => 'next', :href => "/orders/#{@page + 1}" } Older
+
 %table
   %thead
     %tr

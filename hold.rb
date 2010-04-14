@@ -23,8 +23,11 @@ post '/accounts' do
   redirect '/accounts'
 end
 
-get '/orders' do
-  @orders = Order.all(:order => [:id.desc])
+get %r{/orders/?(\d+)?} do
+  @page = params[:captures].try(:first).try(:to_i) || 1
+  offset = (@page - 1) * 10
+  @orders = Order.all(:order => [:id.desc], :limit => 10, :offset => offset)
+  @orders_count = Order.count
   haml :orders
 end
 
