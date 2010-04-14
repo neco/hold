@@ -1,12 +1,23 @@
 require 'haml'
 require 'sass'
 require 'sinatra'
+require 'tzinfo'
 
 require 'lib/config'
 require 'lib/models'
 require 'lib/exchanges'
 
 set :haml, { :attr_wrapper => '"' }
+
+helpers do
+  def output_time(time)
+    unless time.utc?
+      time = TZInfo::Timezone.get('America/New_York').utc_to_local(time)
+    end
+
+    time.strftime('%B %d, %Y at %I:%M %p').gsub(/\s(0)/, ' ')
+  end
+end
 
 get '/accounts' do
   @accounts = Account.all(:order => [:id.desc])

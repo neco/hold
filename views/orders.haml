@@ -25,12 +25,12 @@
           = order.event_name
           %span.minor= order.venue
           .minor
-            = order.occurs_at.strftime('%B %d, %Y at %I:%M %p').gsub(/\s(0)/, ' ')
+            = output_time(order.occurs_at)
             = "(#{order.account.exchange} / #{order.account.username} / #{order.remote_id})"
           - if order.held_at
             .minor
               Placed on hold on
-              = order.held_at.strftime('%B %d, %Y at %I:%M %p').gsub(/\s(0)/, ' ')
+              = output_time(order.held_at)
         %td
           = order.section_number
           .minor= order.row

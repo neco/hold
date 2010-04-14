@@ -22,4 +22,5 @@ gem 'rspec', '1.2.9'
 gem 'sinatra', '0.9.4'
 gem 'state_machine', '0.8.0'
 gem 'tmail', '1.2.6'
+gem 'tzinfo', '0.3.16'
 gem 'webrat', '0.7.0', :only => :testing
