@@ -40,65 +40,99 @@ describe Order do
   end
 
   context "#event_name" do
-    it "replaces '/' with 'vs.'" do
-      order = Order.new(:event => 'New York Knicks/Denver Nuggets')
-      order.event_name.should == 'New York Knicks vs. Denver Nuggets'
-    end
-
-    it "removes 'Tickets' from the end of the event name" do
-      order = Order.new(:event => 'Westminster Kennel Club Dog Show Tickets')
-      order.event_name.should == 'Westminster Kennel Club Dog Show'
-    end
-
-    it "removes anything following 'Tickets' and a hypen" do
-      order = Order.new(:event => 'Sony Ericsson Open Tickets - Session 13')
-      order.event_name.should == 'Sony Ericsson Open'
-
-      order = Order.new(:event => 'In the Heights Tickets - Broadway')
-      order.event_name.should == 'In the Heights'
-
-      order = Order.new(:event => 'Houston Rodeo Tickets - Lady Antebellum')
-      order.event_name.should == 'Houston Rodeo'
-    end
-
-    it "keeps everything following a hyphen before 'Tickets'" do
-      order = Order.new(:event => 'The E.N.D. World Tour - Black Eyed Peas Tickets')
-      order.event_name.should == 'Black Eyed Peas'
-    end
-
-    it "removes anything following in parenthesis" do
-      order = Order.new(:event => 'Super Bowl XLIV Tickets (Indianapolis Colts vs New Orleans Saints)')
-      order.event_name.should == 'Super Bowl XLIV'
-    end
-
-    it "replaces 'at' with 'vs.' and swaps teams" do
-      order = Order.new(:event => 'Washington Wizards at New York Knicks Tickets')
-      order.event_name.should == 'New York Knicks vs. Washington Wizards'
-    end
-
-    it "uses 'WWE' for events starting with 'WWE'" do
-      order = Order.new(:event => 'WWE SmackDown ECW Tickets')
-      order.event_name.should == 'WWE'
-    end
-
     it "uses 'UFC' for 'Ultimate Fighting Championship'" do
-      order = Order.new(:event => 'Ultimate Fighting Championship')
+      order = Order.make(:event => 'Ultimate Fighting Championship')
       order.event_name.should == 'UFC'
     end
 
-    it "uses 'UFC' for specific UCF fights" do
-      order = Order.new(:event => 'UFC 111 Tickets (Georges St-Pierre vs. Dan Hardy)')
-      order.event_name.should == 'UFC'
+    it "strips preceding 'The'" do
+      order = Order.make(:event => 'The Lion King')
+      order.event_name.should == 'Lion King'
     end
 
-    it "appends the session number with a wildcard for 'Big East' events" do
-      order = Order.new(:event => 'Big East Basketball Tournament Tickets - Session 3 (Georgetown vs. TBD, Marquette vs. TBD)')
-      order.event_name.should == 'Big East%Session 3'
+    context "for StubHub events" do
+      before(:each) do
+        account = Account.make(:exchange => 'StubHub')
+        @order = Order.make(:account => account)
+      end
+
+      it "removes 'Tickets' from the end of the event name" do
+        @order.event = 'Westminster Kennel Club Dog Show Tickets'
+        @order.event_name.should == 'Westminster Kennel Club Dog Show'
+      end
+
+      it "removes anything following 'Tickets' and a hypen" do
+        @order.event = 'Sony Ericsson Open Tickets - Session 13'
+        @order.event_name.should == 'Sony Ericsson Open'
+
+        @order.event = 'In the Heights Tickets - Broadway'
+        @order.event_name.should == 'In the Heights'
+
+        @order.event = 'Houston Rodeo Tickets - Lady Antebellum'
+        @order.event_name.should == 'Houston Rodeo'
+      end
+
+      it "keeps everything following a hyphen before 'Tickets'" do
+        @order.event = 'The E.N.D. World Tour - Black Eyed Peas Tickets'
+        @order.event_name.should == 'Black Eyed Peas'
+      end
+
+      it "removes anything following in parenthesis" do
+        @order.event = 'Super Bowl XLIV Tickets (Indianapolis Colts vs New Orleans Saints)'
+        @order.event_name.should == 'Super Bowl XLIV'
+      end
+
+      it "uses 'WWE' for events starting with 'WWE'" do
+        @order.event = 'WWE SmackDown ECW Tickets'
+        @order.event_name.should == 'WWE'
+      end
+
+      it "uses 'UFC' for specific UCF fights" do
+        @order.event = 'UFC 111 Tickets (Georges St-Pierre vs. Dan Hardy)'
+        @order.event_name.should == 'UFC'
+      end
+
+      it "appends the session number with a wildcard for 'Big East' events" do
+        @order.event = 'Big East Basketball Tournament Tickets - Session 3 (Georgetown vs. TBD, Marquette vs. TBD)'
+        @order.event_name.should == 'Big East%Session 3'
+      end
+
+      it "replaces 'at' with 'vs.' and swaps teams" do
+        @order.event = 'Washington Wizards at New York Knicks Tickets'
+        @order.event_name.should == 'New York Knicks vs. Washington Wizards'
+      end
+
+      it "removes anything before a colon or after a hyphen" do
+        @order.event = 'Vancouver Canucks at Los Angeles Kings - Home Game 1'
+        @order.event_name.should == 'Los Angeles Kings vs. Vancouver Canucks'
+      end
+
+      it "strips 'Opening Day'" do
+        @order.event = 'Los Angeles Angels at New York Yankees Opening Day Tickets'
+        @order.event_name.should == 'New York Yankees vs. Los Angeles Angels'
+      end
     end
 
-    it "uses 'Houston Rodeo' for 'Rodeo Houston'" do
-      order = Order.new(:event => 'Rodeo Houston')
-      order.event_name.should == 'Houston Rodeo'
+    context "for RazorGator events" do
+      before(:each) do
+        account = Account.make(:exchange => 'RazorGator')
+        @order = Order.make(:account => account)
+      end
+
+      it "replaces '/' with 'vs.'" do
+        @order.event = 'New York Knicks/Denver Nuggets'
+        @order.event_name.should == 'New York Knicks vs. Denver Nuggets'
+      end
+
+      it "removes duplicate team names for RazorGator" do
+        @order.event = 'Dallas Mavericks - Dallas Mavericks / San Antonio Spurs'
+        @order.event_name.should == 'Dallas Mavericks vs. San Antonio Spurs'
+      end
+
+      it "uses 'Houston Rodeo' for 'Rodeo Houston'" do
+        @order.event = 'Rodeo Houston'
+        @order.event_name.should == 'Houston Rodeo'
+      end
     end
   end
 

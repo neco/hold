@@ -38,17 +38,29 @@ class Order
 
   def event_name
     name = event.dup.strip
-    name.sub!('/', ' vs. ')
-    name.sub!(/\s+Tickets\s+-\s+[\w\s]+\Z/, '')
-    name.sub!(/\A.*?\s+-\s+(.*?)\s+Tickets\Z/, '\1')
-    name.sub!(/\s+\([\w\s]+\)\Z/, '')
-    name.sub!(/\s+Tickets\Z/, '')
+
+    case account.exchange.to_sym
+    when :RazorGator
+      name.sub!(/\A(.*?)\s+-\s+\1/, '\1')
+      name.sub!(/\A(Rodeo)\s+(Houston).*/, '\2 \1')
+      name.sub!(/\A.*:\s+/, '')
+      name.sub!(/(\s+)?\/(\s+)?/, ' vs. ')
+    when :StubHub
+      name.sub!(/\s+\([\w\s]+\)\Z/, '')
+      name.sub!(/\s+Tickets\s+-\s+[\w\s]+\Z/, '')
+      name.sub!(/\A.*?\s+-\s+(.*?)\s+Tickets\Z/, '\1')
+      name.sub!(/\s+Tickets\Z/, '')
+      name.sub!(/\A(Big East)\s+.*(Session\s+\d+).*/, '\1%\2')
+      name.sub!(/\s+-\s+.*\Z/, '')
+      name.sub!(/\A(.*?)\s+at\s+(.*?)\Z/, '\2 vs. \1')
+      name.sub!(/\s+Opening Day/, '')
+    end
+
+    name.sub!(/\AThe\s+/, '')
     name.sub!(/\AWWE\s+.*/, 'WWE')
     name.sub!(/\AUltimate Fighting Championship\Z/, 'UFC')
     name.sub!(/\AUFC\s+\d+.*/, 'UFC')
-    name.sub!(/\A(Big East)\s+.*(Session\s+\d+).*/, '\1%\2')
-    name.sub!(/\A(Rodeo)\s+(Houston).*/, '\2 \1')
-    name.sub!(/\A(.*?)\s+at\s+(.*?)\Z/, '\2 vs. \1')
+
     name
   end
 
