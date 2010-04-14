@@ -50,6 +50,18 @@ describe Order do
       order.event_name.should == 'Lion King'
     end
 
+    context "for Event Inventory events" do
+      before(:each) do
+        account = Account.make(:exchange => 'EventInventory')
+        @order = Order.make(:account => account)
+      end
+
+      it "replaces '/' with 'vs.'" do
+        @order.event = 'Baltimore Orioles/Boston Red Sox'
+        @order.event_name.should == 'Baltimore Orioles vs. Boston Red Sox'
+      end
+    end
+
     context "for StubHub events" do
       before(:each) do
         account = Account.make(:exchange => 'StubHub')

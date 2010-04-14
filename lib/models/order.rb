@@ -40,11 +40,8 @@ class Order
     name = event.dup.strip
 
     case account.exchange.to_sym
-    when :RazorGator
-      name.sub!(/\A(.*?)\s+-\s+\1/, '\1')
-      name.sub!(/\A(Rodeo)\s+(Houston).*/, '\2 \1')
-      name.sub!(/\A.*:\s+/, '')
-      name.sub!(/(\s+)?\/(\s+)?/, ' vs. ')
+    when :EventInventory
+      name.sub!('/', ' vs. ')
     when :StubHub
       name.sub!(/\s+\([\w\s]+\)\Z/, '')
       name.sub!(/\s+Tickets\s+-\s+[\w\s]+\Z/, '')
@@ -54,6 +51,11 @@ class Order
       name.sub!(/\s+-\s+.*\Z/, '')
       name.sub!(/\A(.*?)\s+at\s+(.*?)\Z/, '\2 vs. \1')
       name.sub!(/\s+Opening Day/, '')
+    when :RazorGator
+      name.sub!(/\A(.*?)\s+-\s+\1/, '\1')
+      name.sub!(/\A(Rodeo)\s+(Houston).*/, '\2 \1')
+      name.sub!(/\A.*:\s+/, '')
+      name.sub!(/(\s+)?\/(\s+)?/, ' vs. ')
     end
 
     name.sub!(/\AThe\s+/, '')
