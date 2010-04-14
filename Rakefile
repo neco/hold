@@ -58,6 +58,7 @@ task :sync => :environment do
               Section: #{order.section}
               Row: #{order.row}
               Quantity: #{order.quantity}
+              Exchange: #{order.account.exchange} / #{order.account.username} / #{order.remote_id}
 
           http://hold.neco.com/orders
         BODY
@@ -79,6 +80,7 @@ task :sync => :environment do
               Section: #{order.section}
               Row: #{order.row}
               Quantity: #{order.quantity}
+              Exchange: #{order.account.exchange} / #{order.account.username} / #{order.remote_id}
 
           http://hold.neco.com/orders
         BODY
