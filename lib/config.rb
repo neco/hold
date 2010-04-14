@@ -20,4 +20,5 @@ end
 
 HoptoadNotifier.configure do |config|
   config.api_key = 'cee2dc897686dd748f59ea4eb41bf9a2'
+  config.environment_name = ENV['RACK_ENV']
 end
