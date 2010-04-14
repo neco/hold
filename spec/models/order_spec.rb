@@ -7,26 +7,35 @@ describe Order do
   end
 
   context "state machine" do
-    it "is initialized in state created" do
+    it "is initialized in state 'created'" do
       Order.new.state.should == 'created'
     end
 
-    it "transitions from created to synced" do
+    it "transitions from 'created' to 'synced'" do
       order = Order.make(:state => 'created')
       order.mark_as_synced
       order.state.should == 'synced'
     end
 
-    it "transitions from created to failed" do
+    it "transitions from 'created' to 'failed'" do
       order = Order.make(:state => 'created')
       order.mark_as_failed
       order.state.should == 'failed'
     end
 
-    it "transitions from synced to on hold" do
+    it "transitions from 'synced' to 'on hold'" do
       order = Order.make(:state => 'synced')
       order.place_on_hold
       order.state.should == 'on_hold'
+    end
+
+    it "sets a timestamp when transitioning to 'on hold'" do
+      now = Time.now
+      Time.stub!(:now).and_return(now)
+
+      order = Order.make(:state => 'synced')
+      order.place_on_hold
+      order.held_at.should == now
     end
   end
 

@@ -1,6 +1,7 @@
 require 'dbi'
 require 'dm-core'
 require 'dm-aggregates'
+require 'dm-observer'
 require 'dm-timestamps'
 require 'state_machine'
 

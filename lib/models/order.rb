@@ -16,6 +16,7 @@ class Order
   property :unit_price, BigDecimal
   property :placed_at, DateTime
   property :state, String, :required => true, :default => 'created'
+  property :held_at, DateTime
   property :created_at, DateTime
   property :updated_at, DateTime
 
@@ -128,4 +129,14 @@ class Order
     @pos ||= POS.new
   end
   private :pos
+end
+
+class OrderObserver
+  include DataMapper::Observer
+
+  observe Order
+
+  before_transition :on => :place_on_hold do |transition|
+    self.held_at = Time.now
+  end
 end
