@@ -10,8 +10,8 @@ require 'lib/exchanges'
 set :haml, { :attr_wrapper => '"' }
 
 helpers do
-  def output_time(time)
-    if time.utc?
+  def output_time(time, convert_utc_times=false)
+    if convert_utc_times && time.utc?
       time = TZInfo::Timezone.get('America/New_York').utc_to_local(time)
     end
 

@@ -30,7 +30,7 @@
           - if order.held_at
             .minor
               Placed on hold on
-              = output_time(order.held_at)
+              = output_time(order.held_at, true)
         %td
           = order.section_number
           .minor= order.row
