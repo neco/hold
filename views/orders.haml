@@ -27,7 +27,7 @@
           .minor
             = order.occurs_at.strftime('%B %d, %Y at %I:%M %p').gsub(/\s(0)/, ' ')
             = "(#{order.account.exchange} / #{order.account.username} / #{order.remote_id})"
-          - if order.on_hold?
+          - if order.held_at
             .minor
               Placed on hold on
               = order.held_at.strftime('%B %d, %Y at %I:%M %p').gsub(/\s(0)/, ' ')
