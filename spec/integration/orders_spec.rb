@@ -18,6 +18,7 @@ describe "The orders page" do
       row.should contain(@order.section_number)
       row.should contain(@order.row)
       row.should contain(@order.quantity.to_s)
+      row.should contain(@order.remote_id.to_s)
     end
   end
 end

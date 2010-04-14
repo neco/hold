@@ -19,7 +19,7 @@
           %span.minor= order.venue
           .minor
             = order.occurs_at.strftime('%B %d, %Y at %I:%M %p').gsub(/\s(0)/, ' ')
-            = "(#{order.account.exchange} / #{order.account.username})"
+            = "(#{order.account.exchange} / #{order.account.username} / #{order.remote_id})"
         %td
           = order.section_number
           .minor= order.row
