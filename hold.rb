@@ -11,7 +11,7 @@ set :haml, { :attr_wrapper => '"' }
 
 helpers do
   def output_time(time)
-    unless time.utc?
+    if time.utc?
       time = TZInfo::Timezone.get('America/New_York').utc_to_local(time)
     end
 
