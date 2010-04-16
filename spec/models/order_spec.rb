@@ -123,6 +123,11 @@ describe Order do
         @order.event = 'Los Angeles Angels at New York Yankees Opening Day Tickets'
         @order.event_name.should == 'New York Yankees vs. Los Angeles Angels'
       end
+
+      it "removes preceding year" do
+        @order.event = '2010 US Open Golf Tickets - Saturday Session'
+        @order.event_name.should == 'US Open Golf'
+      end
     end
 
     context "for RazorGator events" do
