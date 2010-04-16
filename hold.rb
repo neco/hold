@@ -8,6 +8,7 @@ require 'lib/models'
 require 'lib/exchanges'
 
 set :haml, { :attr_wrapper => '"' }
+set :per_page, 20
 
 helpers do
   def output_time(time, convert_utc_times=false)
@@ -36,8 +37,11 @@ end
 
 get %r{/orders/?(\d+)?} do
   @page = params[:captures].try(:first).try(:to_i) || 1
-  offset = (@page - 1) * 10
-  @orders = Order.all(:order => [:id.desc], :limit => 10, :offset => offset)
+  @orders = Order.all(
+    :order => [:id.desc],
+    :limit => settings.per_page,
+    :offset => (@page - 1) * settings.per_page
+  )
   @orders_count = Order.count
   haml :orders
 end

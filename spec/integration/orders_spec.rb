@@ -26,7 +26,7 @@ describe "The orders page" do
 
   context "with eleven orders" do
     before(:each) do
-      11.times { Order.make }
+      21.times { Order.make }
     end
 
     context "on the first page" do
