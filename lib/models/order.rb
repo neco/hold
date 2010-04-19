@@ -49,13 +49,13 @@ class Order
       name.sub!(/\s+Tickets\Z/, '')
       name.sub!(/\A(Big East)\s+.*(Session\s+\d+).*/, '\1%\2')
       name.sub!(/\s+-\s+.*\Z/, '')
+      name.sub!(/\A.*:\s+/, '')
       name.sub!(/\A(.*?)\s+at\s+(.*?)\Z/, '\2 vs. \1')
       name.sub!(/\s+Opening Day/, '')
       name.sub!(/20\d\d\s+/, '')
     when :RazorGator
       name.sub!(/\A(.*?)\s+-\s+\1/, '\1')
       name.sub!(/\A(Rodeo)\s+(Houston).*/, '\2 \1')
-      name.sub!(/\A.*:\s+/, '')
       name.sub!(/(\s+)?\/(\s+)?/, ' vs. ')
     end
 

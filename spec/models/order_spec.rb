@@ -114,8 +114,13 @@ describe Order do
         @order.event_name.should == 'New York Knicks vs. Washington Wizards'
       end
 
-      it "removes anything before a colon or after a hyphen" do
+      it "removes anything after a hyphen" do
         @order.event = 'Vancouver Canucks at Los Angeles Kings - Home Game 1'
+        @order.event_name.should == 'Los Angeles Kings vs. Vancouver Canucks'
+      end
+
+      it "removes anything before a colon" do
+        @order.event = 'NHL Western Conference Quarterfinals Playoff Tickets: Vancouver Canucks at Los Angeles Kings - Home Game 2'
         @order.event_name.should == 'Los Angeles Kings vs. Vancouver Canucks'
       end
 
