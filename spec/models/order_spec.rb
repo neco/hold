@@ -170,18 +170,6 @@ describe Order do
     end
   end
 
-  context "#row_number" do
-    it "strips out non-numeric characters" do
-      order = Order.new(:row => '19*')
-      order.row_number.should == '19'
-    end
-
-    it "passes through the row if there's no numeric portion" do
-      order = Order.new(:row => 'D')
-      order.row_number.should == 'D'
-    end
-  end
-
   context "#sync" do
     before(:each) do
       ticket = [
@@ -206,7 +194,7 @@ describe Order do
     end
 
     it "finds tickets for the order's event, seat, and row" do
-      @pos.should_receive(:find_tickets).with(@order.event_name, @order.occurs_at, @order.section_number, @order.row_number).and_return(@tickets)
+      @pos.should_receive(:find_tickets).with(@order.event_name, @order.occurs_at, @order.section_number, @order.row).and_return(@tickets)
       @order.sync
     end
 
