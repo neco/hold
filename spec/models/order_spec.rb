@@ -133,6 +133,11 @@ describe Order do
         @order.event = '2010 US Open Golf Tickets - Saturday Session'
         @order.event_name.should == 'US Open Golf'
       end
+
+      it "replaced 'St' with 'St.'" do
+        @order.event = 'St Louis Cardinals at Philadelphia Phillies Tickets'
+        @order.event_name.should == 'Philadelphia Phillies vs. St. Louis Cardinals'
+      end
     end
 
     context "for RazorGator events" do
