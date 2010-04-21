@@ -127,7 +127,11 @@ class Order
   end
 
   def ticket_blocks
-    tickets.sort_by { |t| t.seat.to_i }.reverse.inject([]) do |blocks, ticket|
+    tickets.select do |ticket|
+      ticket.occurs_at == occurs_at
+    end.sort_by do |ticket|
+      ticket.seat.to_i
+    end.reverse.inject([]) do |blocks, ticket|
       if blocks.empty?
         blocks << [ticket]
       else

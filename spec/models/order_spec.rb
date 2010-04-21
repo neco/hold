@@ -256,12 +256,16 @@ describe Order do
       @order = Order.make(:quantity => 2, :state => 'synced')
     end
 
+    def make_ticket(attributes={})
+      Ticket.make({ :occurs_at => @order.occurs_at }.merge(attributes))
+    end
+
     context "with sufficient quantity" do
-      it "use the highest seat numbers in the block first" do
+      it "uses the highest seat numbers in the block first" do
         @order.stub(:tickets).and_return([
-          Ticket.make(:ticket_id => 1010, :seat => '10'),
-          Ticket.make(:ticket_id => 1011, :seat => '11'),
-          Ticket.make(:ticket_id => 1012, :seat => '12')
+          make_ticket(:ticket_id => 1010, :seat => '10'),
+          make_ticket(:ticket_id => 1011, :seat => '11'),
+          make_ticket(:ticket_id => 1012, :seat => '12')
         ])
 
         @pos.should_receive(:hold_tickets).with(@order, 1011, 1012)
@@ -269,16 +273,16 @@ describe Order do
         @order.hold
       end
 
-      it "take the smallest block that won't leave a single ticket" do
+      it "takes the smallest block that won't leave a single ticket" do
         @order.stub(:tickets).and_return([
-          Ticket.make(:ticket_id => 1010, :seat => '10'),
-          Ticket.make(:ticket_id => 1011, :seat => '11'),
-          Ticket.make(:ticket_id => 1012, :seat => '12'),
+          make_ticket(:ticket_id => 1010, :seat => '10'),
+          make_ticket(:ticket_id => 1011, :seat => '11'),
+          make_ticket(:ticket_id => 1012, :seat => '12'),
           # gap
-          Ticket.make(:ticket_id => 1014, :seat => '14'),
-          Ticket.make(:ticket_id => 1015, :seat => '15'),
-          Ticket.make(:ticket_id => 1016, :seat => '16'),
-          Ticket.make(:ticket_id => 1017, :seat => '17'),
+          make_ticket(:ticket_id => 1014, :seat => '14'),
+          make_ticket(:ticket_id => 1015, :seat => '15'),
+          make_ticket(:ticket_id => 1016, :seat => '16'),
+          make_ticket(:ticket_id => 1017, :seat => '17'),
         ])
 
         @pos.should_receive(:hold_tickets).with(@order, 1016, 1017)
@@ -286,10 +290,28 @@ describe Order do
         @order.hold
       end
 
+      it "only selects tickets with the same time as the order" do
+        matinee = Time.utc(2010, 5, 9, 14, 0, 0)
+        evening = Time.utc(2010, 5, 9, 19, 0, 0)
+
+        @order.stub(:occurs_at).and_return(matinee)
+
+        @order.stub(:tickets).and_return([
+          make_ticket(:ticket_id => 1010, :seat => '10', :occurs_at => matinee),
+          make_ticket(:ticket_id => 1011, :seat => '11', :occurs_at => matinee),
+          make_ticket(:ticket_id => 1015, :seat => '10', :occurs_at => evening),
+          make_ticket(:ticket_id => 1016, :seat => '11', :occurs_at => evening),
+        ])
+
+        @pos.should_receive(:hold_tickets).with(@order, 1010, 1011)
+
+        @order.hold
+      end
+
       it "marks the order state as on hold" do
         @order.stub(:tickets).and_return([
-          Ticket.make(:ticket_id => 1010, :seat => '10'),
-          Ticket.make(:ticket_id => 1011, :seat => '11')
+          make_ticket(:ticket_id => 1010, :seat => '10'),
+          make_ticket(:ticket_id => 1011, :seat => '11')
         ])
 
         @pos.stub(:hold_tickets)
@@ -303,7 +325,7 @@ describe Order do
     context "with insufficient quantity" do
       before(:each) do
         @order.stub(:tickets).and_return([
-          Ticket.make(:ticket_id => 1010, :seat => '10')
+          make_ticket(:ticket_id => 1010, :seat => '10')
         ])
 
         @pos.stub(:hold_tickets)
