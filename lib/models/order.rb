@@ -41,7 +41,7 @@ class Order
 
     case account.exchange.to_sym
     when :EventInventory
-      name.sub!('/', ' vs. ')
+      name.sub!(/\/.*/, '')
     when :StubHub
       name.sub!(/\s+\([\w\s]+\)\Z/, '')
       name.sub!(/\s+Tickets\s+-\s+[\w\s]+\Z/, '')

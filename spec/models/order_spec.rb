@@ -56,9 +56,9 @@ describe Order do
         @order = Order.make(:account => account)
       end
 
-      it "replaces '/' with 'vs.'" do
+      it "strips anything following '/'" do
         @order.event = 'Baltimore Orioles/Boston Red Sox'
-        @order.event_name.should == 'Baltimore Orioles vs. Boston Red Sox'
+        @order.event_name.should == 'Baltimore Orioles'
       end
     end
 
