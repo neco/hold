@@ -43,11 +43,11 @@ class Order
     when :EventInventory
       name.sub!(/\/.*/, '')
     when :StubHub
-      name.sub!(/\s+\([\w\s]+\)\Z/, '')
+      name.sub!(/\s+\(.+\)\Z/, '')
+      name.sub!(/\A(Big East)\s+.*?(Session\s+\d+)/, '\1%\2')
       name.sub!(/\s+Tickets\s+-\s+[\w\s]+\Z/, '')
       name.sub!(/\A.*?\s+-\s+(.*?)\s+Tickets\Z/, '\1')
       name.sub!(/\s+Tickets\Z/, '')
-      name.sub!(/\A(Big East)\s+.*(Session\s+\d+).*/, '\1%\2')
       name.sub!(/\s+-\s+.*\Z/, '')
       name.sub!(/\A.*:\s+/, '')
       name.sub!(/\A(.*?)\s+at\s+(.*?)\Z/, '\2 vs. \1')

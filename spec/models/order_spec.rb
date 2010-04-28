@@ -92,6 +92,9 @@ describe Order do
       it "removes anything following in parenthesis" do
         @order.event = 'Super Bowl XLIV Tickets (Indianapolis Colts vs New Orleans Saints)'
         @order.event_name.should == 'Super Bowl XLIV'
+
+        @order.event = 'Dallas Cowboys at Houston Texans Tickets (Pre-Season)'
+        @order.event_name.should == 'Houston Texans vs. Dallas Cowboys'
       end
 
       it "uses 'WWE' for events starting with 'WWE'" do
