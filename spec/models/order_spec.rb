@@ -141,6 +141,16 @@ describe Order do
         @order.event = 'St Louis Cardinals at Philadelphia Phillies Tickets'
         @order.event_name.should == 'Philadelphia Phillies vs. St. Louis Cardinals'
       end
+
+      it "removes duplicate 'Tickets'" do
+        @order.event = 'Roger Waters Tickets Tickets'
+        @order.event_name.should == 'Roger Waters'
+      end
+
+      it "uses the featured performer" do
+        @order.event = 'The Wall Live Tour featuring Roger Waters Tickets Tickets'
+        @order.event_name.should == 'Roger Waters'
+      end
     end
 
     context "for RazorGator events" do
