@@ -115,7 +115,7 @@ describe Exchanges::StubHub do
       end
 
       it "have a unit price" do
-        @order.unit_price.should == BigDecimal.new('250.2')
+        @order.unit_price.should == BigDecimal.new('243.25')
       end
     end
   end

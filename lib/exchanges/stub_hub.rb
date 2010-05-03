@@ -1,6 +1,7 @@
 module Exchanges
   class StubHub < Base
     HOST = 'https://myaccount.stubhub.com'.freeze
+    RATE = 0.125.freeze
 
     self.broker_id = 1819
     self.employee_id = 1819
@@ -36,7 +37,7 @@ module Exchanges
           cells[3],
           cells[4],
           quantity,
-          (total * BigDecimal.new('0.9')) / quantity
+          (total * BigDecimal.new((1 - RATE).to_s)) / quantity
         )
       end
     end
