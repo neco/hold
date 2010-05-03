@@ -164,9 +164,12 @@ describe Order do
         @order.event_name.should == 'New York Knicks vs. Denver Nuggets'
       end
 
-      it "removes duplicate team names for RazorGator" do
+      it "uses duplicated performer name as event name" do
         @order.event = 'Dallas Mavericks - Dallas Mavericks / San Antonio Spurs'
-        @order.event_name.should == 'Dallas Mavericks vs. San Antonio Spurs'
+        @order.event_name.should == 'Dallas Mavericks'
+
+        @order.event = 'James Taylor - James Taylor / Carole King'
+        @order.event_name.should == 'James Taylor'
       end
 
       it "uses 'Houston Rodeo' for 'Rodeo Houston'" do

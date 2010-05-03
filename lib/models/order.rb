@@ -56,7 +56,7 @@ class Order
       name.sub!(/\bSt\b/, 'St.')
       name.sub!(/.*\sfeaturing\s+(.*)/, '\1')
     when :RazorGator
-      name.sub!(/\A(.*?)\s+-\s+\1/, '\1')
+      name.sub!(/\A(.*?)\s+-\s+\1\s+.*/, '\1')
       name.sub!(/\A(Rodeo)\s+(Houston).*/, '\2 \1')
       name.sub!(/(\s+)?\/(\s+)?/, ' vs. ')
     end
