@@ -2,7 +2,7 @@ clear_sources
 source 'http://gemcutter.org/'
 
 gem 'dbd-odbc', '0.2.5'
-gem 'dbi', '0.4.3'
+gem 'dbi', '0.4.5'
 gem 'dm-aggregates', '0.10.2'
 gem 'dm-core', '0.10.2'
 gem 'dm-observer', '0.10.2'
