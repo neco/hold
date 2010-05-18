@@ -70,7 +70,7 @@ class Order
   end
 
   def section_number
-    number = section.sub(/[^\d]*/, '')
+    number = section.gsub(/[^\d]/, '')
     number.empty? ? section : number
   end
 

@@ -183,6 +183,9 @@ describe Order do
     it "strips out non-numeric characters" do
       order = Order.new(:section => 'Terrace Level 328')
       order.section_number.should == '328'
+
+      order = Order.new(:section => '201 - Possible Obstructed View')
+      order.section_number.should == '201'
     end
 
     it "passes through the section if there's no numeric portion" do
